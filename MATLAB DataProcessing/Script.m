@@ -13,11 +13,13 @@ for i=1:nbPoints
     Z(:,i) = pointsCapture(:,3*i+1);
 end
 
+%For older versions of MATLAB
 fiLegend = fopen('../SkeletonTracking-WPF/bin/Debug/jointsLegend.txt');
 legende = textscan(fiLegend,'%s');
 fclose(fiLegend);
 legende = legende{1};
 
+%For newer versions of MATLAB
 %legende = table2array(readtable('../SkeletonTracking-WPF/bin/Debug/jointsLegend.txt','ReadVariableNames',false));
 
 %% Traces des positions dans l'espace
