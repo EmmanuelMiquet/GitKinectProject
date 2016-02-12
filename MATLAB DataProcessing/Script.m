@@ -13,14 +13,13 @@ for i=1:nbPoints
     Z(:,i) = pointsCapture(:,3*i+1);
 end
 
-legende = table2array(readtable('../SkeletonTracking-WPF/bin/Debug/jointsLegend.txt','ReadVariableNames',false));
+fiLegend = fopen('../SkeletonTracking-WPF/bin/Debug/jointsLegend.txt');
+legende = textscan(fiLegend,'%s');
+fclose(fiLegend);
+legende = legende{1};
 
-%[X,Y,Z] = KinectCleanSingularity(X,Y,Z,nbPoints,dt);
+%legende = table2array(readtable('../SkeletonTracking-WPF/bin/Debug/jointsLegend.txt','ReadVariableNames',false));
 
-% X = [X Xc];
-% Y = [Y Yc];
-% Z = [Z Zc];
-% nbPoints = 6;
 %% Traces des positions dans l'espace
 KinectSpacePlot(X,Z,Y,nbPoints,legende);
 
