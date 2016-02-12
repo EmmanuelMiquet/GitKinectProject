@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Kinect;
+using System;
 
 namespace PL.Kinect
 {
@@ -214,6 +215,61 @@ namespace PL.Kinect
                     coordinates = null;
                 }
             }
+        }
+
+        /// <summary>
+        /// Give RGB values of required pixel in image
+        /// </summary>
+        /// <param name="imageFrame">Image color frame</param>
+        /// <param name="x">X-coordonate in the image (between 0 and imageFrame.Height-1)</param>
+        /// <param name="y">Y-coordonate in the image (between 0 and imageFrame.Width-1)</param>
+        /// <returns>Array containing red, green and blue values of selected pixel</returns>
+        public byte[] getRGBValue(ColorImageFrame imageFrame, int x, int y)
+        {
+            byte[] pixelData = new byte[imageFrame.PixelDataLength];
+            imageFrame.CopyPixelDataTo(pixelData);
+
+            byte[] RGBValue = new byte[3];
+
+            RGBValue[2] = pixelData[(x + y * imageFrame.Width) * 4];
+            RGBValue[1] = pixelData[(x + y * imageFrame.Width) * 4 + 1];
+            RGBValue[0] = pixelData[(x + y * imageFrame.Width) * 4 + 2];
+
+            return RGBValue;
+        }
+
+        /// <summary>
+        /// Give depth value of required pixel in image
+        /// </summary>
+        /// <param name="imageFrame">Image depth frame</param>
+        /// <param name="x">X-coordonate in the image (between 0 and imageFrame.Height-1)</param>
+        /// <param name="y">Y-coordonate in the image (between 0 and imageFrame.Width-1)</param>
+        /// <returns>Int containing depth of selected pixel</returns>
+        public int getDepthValue(DepthImageFrame imageFrame, int x, int y)
+        {
+            short[] pixelData = new short[imageFrame.PixelDataLength];
+            imageFrame.CopyPixelDataTo(pixelData);
+            return ((ushort)pixelData[x + y * imageFrame.Width]) >> 3;
+        }
+
+        /// <summary>
+        /// Calculate angle between three joints
+        /// </summary>
+        /// <param name="targetJoint">Center joint of the angle</param>
+        /// <param name="connectedJoint1">Joint at one extremity of a bone linked to center joint</param>
+        /// <param name="connectedJoint2">Joint at one extremity of another bone linked to center joint</param>
+        /// <returns>Double value of the angle in degrees</returns>
+        public double jointAngle(Joint targetJoint, Joint connectedJoint1, Joint connectedJoint2)
+        {
+            double[] vector1 = new double[3] { connectedJoint1.Position.X - targetJoint.Position.X, connectedJoint1.Position.Y - targetJoint.Position.Y, connectedJoint1.Position.Z - targetJoint.Position.Z };
+            double[] vector2 = new double[3] { connectedJoint2.Position.X - targetJoint.Position.X, connectedJoint2.Position.Y - targetJoint.Position.Y, connectedJoint2.Position.Z - targetJoint.Position.Z };
+
+            double scalarProduct = vector1[0] * vector2[0] + vector1[1] * vector2[1] + vector1[2] * vector2[2];
+
+            double norm1 = Math.Sqrt(vector1[0] * vector1[0] + vector1[1] * vector1[1] + vector1[2] * vector1[2]);
+            double norm2 = Math.Sqrt(vector2[0] * vector2[0] + vector2[1] * vector2[1] + vector2[2] * vector2[2]);
+
+            return (360 * Math.Acos((scalarProduct / (norm1 * norm2)))) / (2 * Math.PI);
         }
     }
 }
