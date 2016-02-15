@@ -208,8 +208,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 foreach (JointType joint in wantedJoints)
                 {
                     jointsLegend.WriteLine(joint.ToString().PadRight(14));
-                }
-                
+                }                
             }
 
             if (null == this.sensor)

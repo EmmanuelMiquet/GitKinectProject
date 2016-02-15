@@ -259,7 +259,7 @@ namespace PL.Kinect
         /// <param name="connectedJoint1">Joint at one extremity of a bone linked to center joint</param>
         /// <param name="connectedJoint2">Joint at one extremity of another bone linked to center joint</param>
         /// <returns>Double value of the angle in degrees</returns>
-        public double jointAngle(Joint targetJoint, Joint connectedJoint1, Joint connectedJoint2)
+        private double jointAngle(Joint targetJoint, Joint connectedJoint1, Joint connectedJoint2)
         {
             double[] vector1 = new double[3] { connectedJoint1.Position.X - targetJoint.Position.X, connectedJoint1.Position.Y - targetJoint.Position.Y, connectedJoint1.Position.Z - targetJoint.Position.Z };
             double[] vector2 = new double[3] { connectedJoint2.Position.X - targetJoint.Position.X, connectedJoint2.Position.Y - targetJoint.Position.Y, connectedJoint2.Position.Z - targetJoint.Position.Z };
