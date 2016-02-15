@@ -186,16 +186,16 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 }
                 //Add joints to track to the list
                 //wantedJoints.Add(JointType.HipCenter);
-                wantedJoints.Add(JointType.Spine);
-                wantedJoints.Add(JointType.ShoulderCenter);
+                //wantedJoints.Add(JointType.Spine);
+                //wantedJoints.Add(JointType.ShoulderCenter);
                 //wantedJoints.Add(JointType.Head);
 
                 //wantedJoints.Add(JointType.ShoulderLeft);
                 //wantedJoints.Add(JointType.ElbowLeft);
                 //wantedJoints.Add(JointType.WristLeft);
-                wantedJoints.Add(JointType.ShoulderRight);
-                wantedJoints.Add(JointType.ElbowRight);
-                wantedJoints.Add(JointType.WristRight);
+                //wantedJoints.Add(JointType.ShoulderRight);
+                //wantedJoints.Add(JointType.ElbowRight);
+                //wantedJoints.Add(JointType.WristRight);
 
                 //wantedJoints.Add(JointType.HipLeft);
                 //wantedJoints.Add(JointType.KneeLeft);
@@ -204,11 +204,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 //wantedJoints.Add(JointType.HipRight);
                 //wantedJoints.Add(JointType.KneeRight);
                 
-                //Write the tracked joints for legend
-                foreach (JointType joint in wantedJoints)
-                {
-                    jointsLegend.WriteLine(joint.ToString().PadRight(14));
-                }                
+                          
             }
 
             if (null == this.sensor)
@@ -229,9 +225,14 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 this.sensor.Stop();
             }
 
-            jointsLegend.Close();
             tools.joints2file(TAB);
+            //Write the tracked joints for legend
+            foreach (JointType joint in wantedJoints)
+            {
+                jointsLegend.WriteLine(joint.ToString().PadRight(14));
+            }
             TAB.Close();
+            jointsLegend.Close();
         }
 
         /// <summary>
@@ -362,10 +363,281 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 if (this.Capture_On.IsChecked.GetValueOrDefault())
                 {
                     captureOn = true;
+                    this.HipCenter.IsEnabled = false;
+                    this.Spine.IsEnabled = false;
+                    this.ShoulderCenter.IsEnabled = false;
+                    this.Head.IsEnabled = false;
+                    this.ShoulderLeft.IsEnabled = false;
+                    this.ElbowLeft.IsEnabled = false;
+                    this.WristLeft.IsEnabled = false;
+                    this.HandLeft.IsEnabled = false;
+                    this.ShoulderRight.IsEnabled = false;
+                    this.ElbowRight.IsEnabled = false;
+                    this.WristRight.IsEnabled = false;
+                    this.HandRight.IsEnabled = false;
+                    this.HipLeft.IsEnabled = false;
+                    this.KneeLeft.IsEnabled = false;
+                    this.AnkleLeft.IsEnabled = false;
+                    this.FootLeft.IsEnabled = false;
+                    this.HipRight.IsEnabled = false;
+                    this.KneeRight.IsEnabled = false;
+                    this.AnkleRight.IsEnabled = false;
+                    this.FootRight.IsEnabled = false;
                 }
                 else
                 {
                     captureOn = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handles the checking or unchecking of the joints combo box
+        /// </summary>
+        /// <param name="sender">object sending the event</param>
+        /// <param name="e">event arguments</param>
+        private void CheckBoxJoints(object sender, RoutedEventArgs e)
+        {
+            if (!captureOn)
+            {
+                if (this.HipCenter != null && this.HipCenter.IsChecked.GetValueOrDefault())
+                {
+                    if(!wantedJoints.Contains(JointType.HipCenter))
+                    {
+                        wantedJoints.Add(JointType.HipCenter);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.HipCenter);
+                }
+
+                if (this.Spine != null && this.Spine.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.Spine))
+                    {
+                        wantedJoints.Add(JointType.Spine);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.Spine);
+                }
+
+                if (this.ShoulderCenter != null && this.ShoulderCenter.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.ShoulderCenter))
+                    {
+                        wantedJoints.Add(JointType.ShoulderCenter);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.ShoulderCenter);
+                }
+
+                if (this.Head != null && this.Head.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.Head))
+                    {
+                        wantedJoints.Add(JointType.Head);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.Head);
+                }
+
+                if (this.ShoulderLeft != null && this.ShoulderLeft.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.ShoulderLeft))
+                    {
+                        wantedJoints.Add(JointType.ShoulderLeft);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.ShoulderLeft);
+                }
+
+                if (this.ElbowLeft != null && this.ElbowLeft.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.ElbowLeft))
+                    {
+                        wantedJoints.Add(JointType.ElbowLeft);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.ElbowLeft);
+                }
+
+                if (this.WristLeft != null && this.WristLeft.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.WristLeft))
+                    {
+                        wantedJoints.Add(JointType.WristLeft);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.WristLeft);
+                }
+
+                if (this.HandLeft != null && this.HandLeft.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.HandLeft))
+                    {
+                        wantedJoints.Add(JointType.HandLeft);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.HandLeft);
+                }
+
+                if (this.ShoulderRight != null && this.ShoulderRight.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.ShoulderRight))
+                    {
+                        wantedJoints.Add(JointType.ShoulderRight);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.ShoulderRight);
+                }
+
+                if (this.ElbowRight != null && this.ElbowRight.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.ElbowRight))
+                    {
+                        wantedJoints.Add(JointType.ElbowRight);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.ElbowRight);
+                }
+
+                if (this.WristRight != null && this.WristRight.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.WristRight))
+                    {
+                        wantedJoints.Add(JointType.WristRight);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.WristRight);
+                }
+
+                if (this.HandRight != null && this.HandRight.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.HandRight))
+                    {
+                        wantedJoints.Add(JointType.HandRight);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.HandRight);
+                }
+
+                if (this.HipLeft != null && this.HipLeft.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.HipLeft))
+                    {
+                        wantedJoints.Add(JointType.HipLeft);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.HipLeft);
+                }
+
+                if (this.KneeLeft != null && this.KneeLeft.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.KneeLeft))
+                    {
+                        wantedJoints.Add(JointType.KneeLeft);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.KneeLeft);
+                }
+
+                if (this.AnkleLeft != null && this.AnkleLeft.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.AnkleLeft))
+                    {
+                        wantedJoints.Add(JointType.AnkleLeft);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.AnkleLeft);
+                }
+
+                if (this.FootLeft != null && this.FootLeft.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.FootLeft))
+                    {
+                        wantedJoints.Add(JointType.FootLeft);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.FootLeft);
+                }
+
+                if (this.HipRight != null && this.HipRight.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.HipRight))
+                    {
+                        wantedJoints.Add(JointType.HipRight);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.HipRight);
+                }
+
+                if (this.KneeRight != null && this.KneeRight.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.KneeRight))
+                    {
+                        wantedJoints.Add(JointType.KneeRight);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.KneeRight);
+                }
+
+                if (this.AnkleRight != null && this.AnkleRight.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.AnkleRight))
+                    {
+                        wantedJoints.Add(JointType.AnkleRight);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.AnkleRight);
+                }
+
+                if (this.FootRight != null && this.FootRight.IsChecked.GetValueOrDefault())
+                {
+                    if (!wantedJoints.Contains(JointType.FootRight))
+                    {
+                        wantedJoints.Add(JointType.FootRight);
+                    }
+                }
+                else
+                {
+                    wantedJoints.Remove(JointType.FootRight);
                 }
             }
         }
