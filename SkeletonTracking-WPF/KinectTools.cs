@@ -8,17 +8,62 @@ namespace PL.Kinect
 {
     class KinectTools
     {
-        int flag = 0; //Necessary variables
+        /// <summary>
+        /// Temporary variable
+        /// </summary>
+        int flag = 0;
+
+        /// <summary>
+        /// Temporary variable
+        /// </summary>
         float t = 0;
+
+        /// <summary>
+        /// Temporary variable
+        /// </summary>
         string time , coordinates;
+
+        /// <summary>
+        /// List storing time values in float format
+        /// </summary>
         List<float> vect_t = new List<float>();
+
+        /// <summary>
+        /// List temporarly storing joints X-coordinate at a given time in float format
+        /// </summary>
         List<float> Xj = new List<float>();
+
+        /// <summary>
+        /// List temporarly storing joints Y-coordinate at a given time in float format
+        /// </summary>
         List<float> Yj = new List<float>();
+
+        /// <summary>
+        /// List temporarly storing joints Z-coordinate at a given time in float format
+        /// </summary>
         List<float> Zj = new List<float>();
+
+        /// <summary>
+        /// List storing the concatenation of X-coordinate values for each joint and for each time sample
+        /// </summary>
         List<List<float>> Xi = new List<List<float>>();
-        List<List<float>> Yi = new List<List<float>>();
-        List<List<float>> Zi = new List<List<float>>();
         
+        /// <summary>
+        /// List storing the concatenation of Y-coordinate values for each joint and for each time sample
+        /// </summary>
+        List<List<float>> Yi = new List<List<float>>();
+
+        /// <summary>
+        /// List storing the concatenation of Z-coordinate values for each joint and for each time sample
+        /// </summary>
+        List<List<float>> Zi = new List<List<float>>();
+
+        /// <summary>
+        /// Lists to store all relevant articulations for angle calculation (composed of 3 JointType)
+        /// </summary>
+        List<JointType> AngleNeck, AngleSpine, AngleElbowRight, AngleShoulderRight, AngleKneeRight, AngleHipRight, AngleElbowLeft, AngleShoulderLeft, AngleKneeLeft, AngleHipLeft = new List<JointType>(3);
+
+        /*
         List<JointType> AngleNeck = new List<JointType>(3);
         List<JointType> AngleSpine = new List<JointType>(3);
         List<JointType> AngleElbowRight = new List<JointType>(3);
@@ -29,11 +74,15 @@ namespace PL.Kinect
         List<JointType> AngleShoulderLeft = new List<JointType>(3);
         List<JointType> AngleKneeLeft = new List<JointType>(3);
         List<JointType> AngleHipLeft = new List<JointType>(3);
+        */
 
+        /// <summary>
+        /// List of angles user can study from wantedJoints
+        /// </summary>
         List<List<JointType>> WantedAngles = new List<List<JointType>>();
 
         /// <summary>
-        /// Default constructor
+        /// Default constructor, initializes joints angles
         /// </summary>
         public KinectTools()
         {
@@ -90,7 +139,7 @@ namespace PL.Kinect
         }
 
         /// <summary>
-        /// Extract skeleton points RAW potsiton to a file
+        /// Extracts skeleton points RAW potsiton to a file
         /// </summary>
         /// <param name="TAB">File in which we want to write</param>
         public void joints2fileRAW(TextWriter TAB)
@@ -114,7 +163,7 @@ namespace PL.Kinect
         }
 
         /// <summary>
-        /// Extract skeleton points RAW potsiton to several lists
+        /// Extracts skeleton points RAW potsiton to several lists
         /// </summary>
         /// <param name="skeleton">Skeleton detected in the current frame</param>
         /// <param name="wantedJoints">List of wanted joints to put in the file</param>
@@ -160,7 +209,7 @@ namespace PL.Kinect
         }
 
         /// <summary>
-        /// Clean the data from the inferred or non tracked points to smooth processing
+        /// Cleans the data from the inferred or non tracked points to smooth processing
         /// </summary>
         /// <param name="nbPoints">Number of tracked points</param>
         private void cleanSingularity(int nbPoints)
@@ -263,7 +312,7 @@ namespace PL.Kinect
         }
 
         /// <summary>
-        /// Extract skeleton points processed potsiton to a file
+        /// Extracts skeleton points processed potsiton to a file
         /// </summary>
         /// <param name="TAB">File in which we want to write</param>
         public void joints2file(TextWriter TAB)
@@ -288,9 +337,10 @@ namespace PL.Kinect
         }
 
         /// <summary>
-        /// 
+        /// Selects appropriate articulations to study from user wantedJoints List and saves angles legend to text file
         /// </summary>
-        /// <param name="wantedJoints"></param>
+        /// <param name="anglesLegendPath">Path to file storing legend for Matlab data processing</param>
+        /// <param name="wantedJoints">List of tracked joints from user choice</param>
         private void initWantedAngles(string anglesLegendPath, List<JointType> wantedJoints)
         {
             List<List<JointType>> toRemove = new List<List<JointType>>();
@@ -323,10 +373,10 @@ namespace PL.Kinect
         }
 
         /// <summary>
-        /// 
+        /// Creates file and stores members lengths for each studied articulation
         /// </summary>
-        /// <param name="bonesLength"></param>
-        /// <param name="wantedJoints"></param>
+        /// <param name="bonesLengthPath">Path to file storing members length</param>
+        /// <param name="wantedJoints">List of tracked joints from user choice</param>
         private void bonesLength(string bonesLengthPath, List<JointType> wantedJoints)
         {
             TextWriter bonesLengthFile = new StreamWriter(bonesLengthPath);
@@ -350,10 +400,12 @@ namespace PL.Kinect
         }
 
         /// <summary>
-        /// 
+        /// Determines length between two joints
         /// </summary>
-        /// <param name="origin"></param>
-        /// <param name="extremity"></param>
+        /// <param name="origin">One extremity of the segment</param>
+        /// <param name="extremity">Other extemity of the segment</param>
+        /// <param name="wantedJoints">List of tracked joints from user choice</param>
+        /// <returns>Length value in double format</returns>
         private double lengthEvaluation(JointType origin, JointType extremity, List<JointType> wantedJoints)
         {
             if (wantedJoints.Contains(origin) && wantedJoints.Contains(extremity))
@@ -380,12 +432,12 @@ namespace PL.Kinect
         }
 
         /// <summary>
-        /// 
+        /// Calls initialization methods for angle processing and writes calculated angles in a text file
         /// </summary>
-        /// <param name="anglesLegendPath"></param>
-        /// <param name="bonesLengthPath"></param>
-        /// <param name="anglesDataPath"></param>
-        /// <param name="wantedJoints"></param>
+        /// <param name="anglesLegendPath">Path to file storing legend for Matlab data processing</param>
+        /// <param name="bonesLengthPath">Path to file storing members length</param>
+        /// <param name="anglesDataPath">Path to file storing calculated angle data</param>
+        /// <param name="wantedJoints">List of tracked joints from user choice</param>
         public void manageAngles(string anglesLegendPath, string bonesLengthPath, string anglesDataPath, List<JointType> wantedJoints)
         {
             TextWriter anglesDataFile = new StreamWriter(anglesDataPath);
@@ -467,11 +519,11 @@ namespace PL.Kinect
         }
 
         /// <summary>
-        /// 
+        /// Overloads jointAngle(Joint, Joint, Joint), calculates angle between two vectors of same dimension
         /// </summary>
-        /// <param name="vector1"></param>
-        /// <param name="vector2"></param>
-        /// <returns></returns>
+        /// <param name="vector1">First vector of double</param>
+        /// <param name="vector2">Second vector of double</param>
+        /// <returns>Double value of the angle in degrees</returns>
         private double jointAngle(double[] vector1, double[]vector2)
         {
             return (360 * Math.Acos(scalarProduct(vector1, vector2) / (norm2(vector1) * norm2(vector2))) / (2 * Math.PI));
