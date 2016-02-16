@@ -59,17 +59,53 @@ namespace PL.Kinect
         List<List<float>> Zi = new List<List<float>>();
 
         /// <summary>
-        /// Lists to store all relevant articulations for angle calculation (composed of 3 JointType)
+        /// List to store neck related joints for angle calculation (composed of 3 JointType)
         /// </summary>
         List<JointType> AngleNeck = new List<JointType>(3);
+        
+        /// <summary>
+        /// List to store spine related joints for angle calculation (composed of 3 JointType)
+        /// </summary>
         List<JointType> AngleSpine = new List<JointType>(3);
+
+        /// <summary>
+        /// List to store right elbow related joints for angle calculation (composed of 3 JointType)
+        /// </summary>
         List<JointType> AngleElbowRight = new List<JointType>(3);
+
+        /// <summary>
+        /// List to store right shouler related joints for angle calculation (composed of 3 JointType)
+        /// </summary>
         List<JointType> AngleShoulderRight = new List<JointType>(3);
+
+        /// <summary>
+        /// List to store right knee related joints for angle calculation (composed of 3 JointType)
+        /// </summary>
         List<JointType> AngleKneeRight = new List<JointType>(3);
+
+        /// <summary>
+        /// List to store right hip related joints for angle calculation (composed of 3 JointType)
+        /// </summary>List<JointType> AngleKneeRight = new List<JointType>(3);
         List<JointType> AngleHipRight = new List<JointType>(3);
+
+        /// <summary>
+        /// List to store left elbow related joints for angle calculation (composed of 3 JointType)
+        /// </summary>
         List<JointType> AngleElbowLeft = new List<JointType>(3);
+
+        /// <summary>
+        /// List to store left shoulder related joints for angle calculation (composed of 3 JointType)
+        /// </summary>
         List<JointType> AngleShoulderLeft = new List<JointType>(3);
+
+        /// <summary>
+        /// List to store left knee related joints for angle calculation (composed of 3 JointType)
+        /// </summary>
         List<JointType> AngleKneeLeft = new List<JointType>(3);
+
+        /// <summary>
+        /// List to store left hip related joints for angle calculation (composed of 3 JointType)
+        /// </summary>
         List<JointType> AngleHipLeft = new List<JointType>(3);
 
         /// <summary>
