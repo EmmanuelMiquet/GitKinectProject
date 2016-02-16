@@ -71,7 +71,8 @@
             </StatusBarItem>
         </StatusBar>
         <CheckBox Grid.Row="2" Style="{StaticResource SquareCheckBox}" Content="Capture On" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="624,10,0,10" x:Name="Capture_On" Checked="CheckBoxCaptureOn" Unchecked="CheckBoxCaptureOn" Width="109"/>
-        <Grid Grid.Column="1" Margin="9.8,106,9.6,90" Grid.Row="1">
+        <CheckBox Grid.Row="2" Style="{StaticResource SquareCheckBox}" Content="Display all joints" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="312,10,0,10" x:Name="displayAll" Checked="CheckBoxDisplayAllJoints" Unchecked="CheckBoxDisplayAllJoints" Width="150"/>
+        <Grid Grid.Column="1" Margin="9.8,10,9.6,10" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="398" ScrollViewer.VerticalScrollBarVisibility="Disabled">
             <CheckBox Style="{StaticResource SquareCheckBox}" Content="HipCenter" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,366" x:Name="HipCenter" Checked="CheckBoxJoints" Unchecked="CheckBoxJoints" Width="109" IsEnabled="True" IsChecked="True"/>
             <CheckBox Style="{StaticResource SquareCheckBox}" Content="Spine" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="153,0,0,366" x:Name="Spine" Checked="CheckBoxJoints" Unchecked="CheckBoxJoints" Width="109" IsEnabled="True" IsChecked="True"/>
             <CheckBox Style="{StaticResource SquareCheckBox}" Content="ShoulderCenter" Height="30" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,35,0,331" x:Name="ShoulderCenter" Checked="CheckBoxJoints" Unchecked="CheckBoxJoints" Width="150" IsEnabled="True" IsChecked="True"/>
