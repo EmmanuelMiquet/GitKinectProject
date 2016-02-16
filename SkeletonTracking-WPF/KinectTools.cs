@@ -61,9 +61,6 @@ namespace PL.Kinect
         /// <summary>
         /// Lists to store all relevant articulations for angle calculation (composed of 3 JointType)
         /// </summary>
-        List<JointType> AngleNeck, AngleSpine, AngleElbowRight, AngleShoulderRight, AngleKneeRight, AngleHipRight, AngleElbowLeft, AngleShoulderLeft, AngleKneeLeft, AngleHipLeft = new List<JointType>(3);
-
-        /*
         List<JointType> AngleNeck = new List<JointType>(3);
         List<JointType> AngleSpine = new List<JointType>(3);
         List<JointType> AngleElbowRight = new List<JointType>(3);
@@ -74,7 +71,6 @@ namespace PL.Kinect
         List<JointType> AngleShoulderLeft = new List<JointType>(3);
         List<JointType> AngleKneeLeft = new List<JointType>(3);
         List<JointType> AngleHipLeft = new List<JointType>(3);
-        */
 
         /// <summary>
         /// List of angles user can study from wantedJoints
@@ -142,8 +138,11 @@ namespace PL.Kinect
         /// Extracts skeleton points RAW potsiton to a file
         /// </summary>
         /// <param name="TAB">File in which we want to write</param>
-        public void joints2fileRAW(TextWriter TAB)
+        public void joints2fileRAW(string TABpath, string jointsLegendPath, List<JointType> wantedJoints)
         {
+            TextWriter TAB = new StreamWriter(TABpath);
+            TextWriter jointsLegend = new StreamWriter(jointsLegendPath);
+
             if (vect_t.Count != 0)
             {
                 for (int i = 0; i < vect_t.Count; i++)
@@ -160,6 +159,15 @@ namespace PL.Kinect
                     coordinates = null;
                 }
             }
+
+            //Write the name of tracked joints for legend
+            foreach (JointType joint in wantedJoints)
+            {
+                jointsLegend.WriteLine(joint.ToString().PadRight(14));
+            }
+
+            TAB.Close();
+            jointsLegend.Close();
         }
 
         /// <summary>
@@ -167,7 +175,7 @@ namespace PL.Kinect
         /// </summary>
         /// <param name="skeleton">Skeleton detected in the current frame</param>
         /// <param name="wantedJoints">List of wanted joints to put in the file</param>
-        public void joints2list(Skeleton skeleton, List<JointType> wantedJoints)
+        public double joints2list(Skeleton skeleton, List<JointType> wantedJoints)
         {
             foreach (Joint joint in skeleton.Joints) //For each joint in the current skeleton
             {
@@ -206,6 +214,7 @@ namespace PL.Kinect
                     }
                 }
             }
+            return (t - 1) / 30;
         }
 
         /// <summary>
@@ -315,8 +324,11 @@ namespace PL.Kinect
         /// Extracts skeleton points processed potsiton to a file
         /// </summary>
         /// <param name="TAB">File in which we want to write</param>
-        public void joints2file(TextWriter TAB)
+        public void joints2file(string TABpath, string jointsLegendPath, List<JointType> wantedJoints)
         {
+            TextWriter TAB = new StreamWriter(TABpath);
+            TextWriter jointsLegend = new StreamWriter(jointsLegendPath);
+
             if (vect_t.Count != 0)
             {
                 cleanSingularity(Xi[0].Count);
@@ -334,6 +346,15 @@ namespace PL.Kinect
                     coordinates = null;
                 }
             }
+
+            //Write the name of tracked joints for legend
+            foreach (JointType joint in wantedJoints)
+            {
+                jointsLegend.WriteLine(joint.ToString().PadRight(14));
+            }
+
+            TAB.Close();
+            jointsLegend.Close();
         }
 
         /// <summary>
@@ -391,9 +412,9 @@ namespace PL.Kinect
 
                 bonesLengthFile.Write((triplet[0].ToString() + " - " + triplet[1].ToString() + " - " + triplet[2].ToString()).PadRight(48));
 
-                bonesLengthFile.Write("\t" + (triplet[0].ToString() + " - " + triplet[1].ToString()).PadRight(31) + "\t" + length1.ToString().PadRight(16, '0'));
+                bonesLengthFile.Write("\t" + (triplet[0].ToString() + " - " + triplet[1].ToString()).PadRight(31) + "\t" + length1.ToString().PadRight(16, '0').Replace(",", "."));
 
-                bonesLengthFile.WriteLine("\t" + (triplet[0].ToString() + " - " + triplet[2].ToString()).PadRight(31) + "\t" + length2.ToString().PadRight(16, '0'));
+                bonesLengthFile.WriteLine("\t" + (triplet[0].ToString() + " - " + triplet[2].ToString()).PadRight(31) + "\t" + length2.ToString().PadRight(16, '0').Replace(",", "."));
             }
 
             bonesLengthFile.Close();
@@ -447,7 +468,7 @@ namespace PL.Kinect
 
             for(int i = 0 ; i < vect_t.Count ; i++)
             {
-                anglesDataFile.Write(string.Format("{0:0.00000000}", vect_t[i]) + "\t");
+                anglesDataFile.Write(string.Format("{0:0.00000000}", vect_t[i]).Replace(",",".") + "\t");
 
                 foreach(List<JointType> triplet in WantedAngles)
                 {
@@ -459,7 +480,7 @@ namespace PL.Kinect
                         (Xi[i][wantedJoints.IndexOf(triplet[2])] - Xi[i][wantedJoints.IndexOf(triplet[0])]),
                         (Yi[i][wantedJoints.IndexOf(triplet[2])] - Yi[i][wantedJoints.IndexOf(triplet[0])]),
                         (Zi[i][wantedJoints.IndexOf(triplet[2])] - Zi[i][wantedJoints.IndexOf(triplet[0])])})
-                        .ToString().PadRight(16,'0') + "\t");
+                        .ToString().PadRight(16,'0').Replace(",", ".") + "\t");
                 }
 
                 anglesDataFile.WriteLine();

@@ -84,12 +84,12 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// <summary>
         /// Stream to write joints in a file
         /// </summary>
-        TextWriter TAB = new StreamWriter("pointsCapture.txt");
+        string pointsCapturePath = "pointsCapture.txt";
         
         /// <summary>
         /// Stream to write the joints legend
         /// </summary>
-        TextWriter jointsLegend = new StreamWriter("jointsLegend.txt");
+        string jointsLegendPath = "jointsLegend.txt";
 
         /// <summary>
         /// Path to write angles in a file
@@ -224,20 +224,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
 
             //Write joints in a file
-            tools.joints2file(TAB);
+            tools.joints2file(pointsCapturePath,jointsLegendPath,wantedJoints);
 
             //Calculate and write angles and bone length
             tools.manageAngles(anglesLegendPath, bonesLengthPath, anglesDataPath, wantedJoints);
-
-            //Write the name of tracked joints for legend
-            foreach (JointType joint in wantedJoints)
-            {
-                jointsLegend.WriteLine(joint.ToString().PadRight(14));
-            }
-
-            //Close all streams
-            TAB.Close();
-            jointsLegend.Close();
         }
 
         /// <summary>
@@ -275,7 +265,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                             if (captureOn)
                             {
                                 //Our function to save the wanted joints
-                                tools.joints2list(skel, wantedJoints);
+                                timeBox.Text = (string.Format("{0:0.0000}", tools.joints2list(skel, wantedJoints)).Replace(",",".") + " s");
                             }
                         }
                         else if (skel.TrackingState == SkeletonTrackingState.PositionOnly)
@@ -370,6 +360,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 if (this.Capture_On.IsChecked.GetValueOrDefault())
                 {
                     captureOn = true;
+                    REC.Visibility = Visibility.Visible;
                     this.HipCenter.IsEnabled = false;
                     this.Spine.IsEnabled = false;
                     this.ShoulderCenter.IsEnabled = false;
@@ -394,6 +385,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 else
                 {
                     captureOn = false;
+                    REC.Visibility = Visibility.Hidden;
                 }
             }
         }
