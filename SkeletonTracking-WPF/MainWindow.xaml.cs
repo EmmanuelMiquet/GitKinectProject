@@ -82,25 +82,37 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         }
 
         /// <summary>
-        /// Initializes a stream to write joints in a file
+        /// Stream to write joints in a file
         /// </summary>
         TextWriter TAB = new StreamWriter("pointsCapture.txt");
+        
+        /// <summary>
+        /// Stream to write the joints legend
+        /// </summary>
         TextWriter jointsLegend = new StreamWriter("jointsLegend.txt");
 
         /// <summary>
-        /// Initializes a stream to write angles in a files
+        /// Path to write angles in a file
+        /// </summary>
+        string anglesDataPath = "anglesData.txt";
+        
+        /// <summary>
+        /// Path to write the angles legend
         /// </summary>
         string anglesLegendPath = "anglesLegend.txt";
-        string anglesDataPath = "anglesData.txt";
+
+        /// <summary>
+        /// Path to write the bones length
+        /// </summary>
         string bonesLengthPath = "bonesLength.txt";
 
         /// <summary>
-        /// New list of joints that we want to track
+        /// List of joints that we want to track
         /// </summary>
         List<JointType> wantedJoints = new List<JointType>();
 
         /// <summary>
-        /// New instance of our objects to acces our tools
+        /// Personnal set of tools for our project
         /// </summary>
         KinectTools tools = new KinectTools();
 
@@ -191,27 +203,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 {
                     this.sensor = null;
                 }
-                //Add joints to track to the list
-                //wantedJoints.Add(JointType.HipCenter);
-                //wantedJoints.Add(JointType.Spine);
-                //wantedJoints.Add(JointType.ShoulderCenter);
-                //wantedJoints.Add(JointType.Head);
-
-                //wantedJoints.Add(JointType.ShoulderLeft);
-                //wantedJoints.Add(JointType.ElbowLeft);
-                //wantedJoints.Add(JointType.WristLeft);
-                //wantedJoints.Add(JointType.ShoulderRight);
-                //wantedJoints.Add(JointType.ElbowRight);
-                //wantedJoints.Add(JointType.WristRight);
-
-                //wantedJoints.Add(JointType.HipLeft);
-                //wantedJoints.Add(JointType.KneeLeft);
-                //wantedJoints.Add(JointType.AnkleLeft);
-                //wantedJoints.Add(JointType.AnkleRight);
-                //wantedJoints.Add(JointType.HipRight);
-                //wantedJoints.Add(JointType.KneeRight);
-                
-                          
             }
 
             if (null == this.sensor)
@@ -232,16 +223,21 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 this.sensor.Stop();
             }
 
+            //Write joints in a file
             tools.joints2file(TAB);
-            //Write the tracked joints for legend
+
+            //Calculate and write angles and bone length
+            tools.manageAngles(anglesLegendPath, bonesLengthPath, anglesDataPath, wantedJoints);
+
+            //Write the name of tracked joints for legend
             foreach (JointType joint in wantedJoints)
             {
                 jointsLegend.WriteLine(joint.ToString().PadRight(14));
             }
+
+            //Close all streams
             TAB.Close();
             jointsLegend.Close();
-
-            tools.manageAngles(anglesLegendPath, bonesLengthPath, anglesDataPath, wantedJoints);
         }
 
         /// <summary>
@@ -278,7 +274,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                             this.DrawBonesAndJoints(skel, dc);
                             if (captureOn)
                             {
-                                tools.joints2list(skel, wantedJoints); //Notre fonction
+                                //Our function to save the wanted joints
+                                tools.joints2list(skel, wantedJoints);
                             }
                         }
                         else if (skel.TrackingState == SkeletonTrackingState.PositionOnly)
@@ -309,16 +306,17 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             foreach (Joint joint in skeleton.Joints)
             {
                 Brush drawBrush = null;
-
-                if (joint.TrackingState == JointTrackingState.Tracked)
+                if (wantedJoints.Contains(joint.JointType) || displayAllJoints) //Handles the "displayAllJoint" checkBox
                 {
-                    drawBrush = this.trackedJointBrush;
+                    if (joint.TrackingState == JointTrackingState.Tracked)
+                    {
+                        drawBrush = this.trackedJointBrush;
+                    }
+                    else if (joint.TrackingState == JointTrackingState.Inferred)
+                    {
+                        drawBrush = this.inferredJointBrush;
+                    }
                 }
-                else if (joint.TrackingState == JointTrackingState.Inferred)
-                {
-                    drawBrush = this.inferredJointBrush;                    
-                }
-
                 if (drawBrush != null)
                 {
                     drawingContext.DrawEllipse(drawBrush, null, this.SkeletonPointToScreen(joint.Position), JointThickness, JointThickness);
@@ -397,6 +395,24 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 {
                     captureOn = false;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Handles the checking or unchecking of the capture on combo box
+        /// </summary>
+        /// <param name="sender">object sending the event</param>
+        /// <param name="e">event arguments</param>
+        bool displayAllJoints = false;
+        private void CheckBoxDisplayAllJoints(object sender, RoutedEventArgs e)
+        {
+            if (this.displayAll.IsChecked.GetValueOrDefault())
+            {
+                displayAllJoints = true;
+            }
+            else
+            {
+                displayAllJoints = false;
             }
         }
 
