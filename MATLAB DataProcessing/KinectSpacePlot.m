@@ -10,5 +10,6 @@ function [] = KinectSpacePlot(X,Z,Y,nbPoints,legende)
     zlabel('y');
     legend(legende);
     grid on;
+    view (3), rotate3d on;
 end
 
