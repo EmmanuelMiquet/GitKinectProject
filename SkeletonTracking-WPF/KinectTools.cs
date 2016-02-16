@@ -18,6 +18,76 @@ namespace PL.Kinect
         List<List<float>> Xi = new List<List<float>>();
         List<List<float>> Yi = new List<List<float>>();
         List<List<float>> Zi = new List<List<float>>();
+        
+        List<JointType> AngleNeck = new List<JointType>(3);
+        List<JointType> AngleSpine = new List<JointType>(3);
+        List<JointType> AngleElbowRight = new List<JointType>(3);
+        List<JointType> AngleShoulderRight = new List<JointType>(3);
+        List<JointType> AngleKneeRight = new List<JointType>(3);
+        List<JointType> AngleHipRight = new List<JointType>(3);
+        List<JointType> AngleElbowLeft = new List<JointType>(3);
+        List<JointType> AngleShoulderLeft = new List<JointType>(3);
+        List<JointType> AngleKneeLeft = new List<JointType>(3);
+        List<JointType> AngleHipLeft = new List<JointType>(3);
+
+        List<List<JointType>> WantedAngles = new List<List<JointType>>();
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        public KinectTools()
+        {
+            AngleNeck.Add(JointType.ShoulderCenter);
+            AngleNeck.Add(JointType.Head);
+            AngleNeck.Add(JointType.Spine);
+
+            AngleSpine.Add(JointType.Spine);
+            AngleSpine.Add(JointType.ShoulderCenter);
+            AngleSpine.Add(JointType.HipCenter);
+            
+            AngleElbowRight.Add(JointType.ElbowRight);
+            AngleElbowRight.Add(JointType.WristRight);
+            AngleElbowRight.Add(JointType.ShoulderRight);
+
+            AngleShoulderRight.Add(JointType.ShoulderRight);
+            AngleShoulderRight.Add(JointType.ShoulderCenter);
+            AngleShoulderRight.Add(JointType.ElbowRight);
+
+            AngleKneeRight.Add(JointType.KneeRight);
+            AngleKneeRight.Add(JointType.AnkleRight);
+            AngleKneeRight.Add(JointType.HipRight);
+
+            AngleHipRight.Add(JointType.HipRight);
+            AngleHipRight.Add(JointType.HipCenter);
+            AngleHipRight.Add(JointType.KneeRight);
+
+            AngleElbowLeft.Add(JointType.ElbowLeft);
+            AngleElbowLeft.Add(JointType.WristLeft);
+            AngleElbowLeft.Add(JointType.ShoulderLeft);
+
+            AngleShoulderLeft.Add(JointType.ShoulderLeft);
+            AngleShoulderLeft.Add(JointType.ShoulderCenter);
+            AngleShoulderLeft.Add(JointType.ElbowLeft);
+
+            AngleKneeLeft.Add(JointType.KneeLeft);
+            AngleKneeLeft.Add(JointType.AnkleLeft);
+            AngleKneeLeft.Add(JointType.HipLeft);
+
+            AngleHipLeft.Add(JointType.HipLeft);
+            AngleHipLeft.Add(JointType.HipCenter);
+            AngleHipLeft.Add(JointType.KneeLeft);
+
+            WantedAngles.Add(AngleNeck);
+            WantedAngles.Add(AngleSpine);
+            WantedAngles.Add(AngleElbowRight);
+            WantedAngles.Add(AngleShoulderRight);
+            WantedAngles.Add(AngleKneeRight);
+            WantedAngles.Add(AngleHipRight);
+            WantedAngles.Add(AngleElbowLeft);
+            WantedAngles.Add(AngleShoulderLeft);
+            WantedAngles.Add(AngleKneeLeft);
+            WantedAngles.Add(AngleHipLeft);
+        }
 
         /// <summary>
         /// Extract skeleton points RAW potsiton to a file
@@ -218,6 +288,135 @@ namespace PL.Kinect
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="wantedJoints"></param>
+        private void initWantedAngles(string anglesLegendPath, List<JointType> wantedJoints)
+        {
+            List<List<JointType>> toRemove = new List<List<JointType>>();
+
+            TextWriter anglesLegendFile = new StreamWriter(anglesLegendPath);
+
+            foreach (List<JointType> triplet in WantedAngles)
+            {
+                foreach(JointType joint in triplet)
+                {
+                    if(!wantedJoints.Contains(joint))
+                    {
+                        toRemove.Add(triplet);
+                        break;
+                    }
+                }
+            }
+
+            foreach(List<JointType> i in toRemove)
+            {
+                WantedAngles.Remove(i);
+            }
+
+            foreach(List<JointType> triplet in WantedAngles)
+            {
+                anglesLegendFile.WriteLine((triplet[0].ToString() + " - " + triplet[1].ToString() + " - " + triplet[2].ToString()).PadRight(48));
+            }
+
+            anglesLegendFile.Close();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bonesLength"></param>
+        /// <param name="wantedJoints"></param>
+        private void bonesLength(string bonesLengthPath, List<JointType> wantedJoints)
+        {
+            TextWriter bonesLengthFile = new StreamWriter(bonesLengthPath);
+
+            double length1;
+            double length2;
+            
+            foreach(List<JointType> triplet in WantedAngles)
+            {
+                length1 = lengthEvaluation(triplet[0],triplet[1],wantedJoints);
+                length2 = lengthEvaluation(triplet[0],triplet[2],wantedJoints);
+
+                bonesLengthFile.Write((triplet[0].ToString() + " - " + triplet[1].ToString() + " - " + triplet[2].ToString()).PadRight(48));
+
+                bonesLengthFile.Write("\t" + (triplet[0].ToString() + " - " + triplet[1].ToString()).PadRight(31) + "\t" + length1.ToString().PadRight(16, '0'));
+
+                bonesLengthFile.WriteLine("\t" + (triplet[0].ToString() + " - " + triplet[2].ToString()).PadRight(31) + "\t" + length2.ToString().PadRight(16, '0'));
+            }
+
+            bonesLengthFile.Close();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="origin"></param>
+        /// <param name="extremity"></param>
+        private double lengthEvaluation(JointType origin, JointType extremity, List<JointType> wantedJoints)
+        {
+            if (wantedJoints.Contains(origin) && wantedJoints.Contains(extremity))
+            {
+                double length = 0;
+
+                int i = 0;
+                int j = wantedJoints.IndexOf(origin);
+                int k = wantedJoints.IndexOf(extremity);
+
+                for(i = 0 ; i < vect_t.Count ; i++)
+                {
+                    length += norm2(new double[] {(Xi[i][j]-Xi[i][k]), (Yi[i][j] - Yi[i][k]), (Zi[i][j] - Zi[i][k])});
+                }
+                length /= i;
+
+                return length;
+            }
+            else
+            {
+                Console.WriteLine("ERROR in lengthEvaluation ! Joint not tracked !");
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="anglesLegendPath"></param>
+        /// <param name="bonesLengthPath"></param>
+        /// <param name="anglesDataPath"></param>
+        /// <param name="wantedJoints"></param>
+        public void manageAngles(string anglesLegendPath, string bonesLengthPath, string anglesDataPath, List<JointType> wantedJoints)
+        {
+            TextWriter anglesDataFile = new StreamWriter(anglesDataPath);
+
+            initWantedAngles(anglesLegendPath, wantedJoints);
+            bonesLength(bonesLengthPath, wantedJoints);
+
+            for(int i = 0 ; i < vect_t.Count ; i++)
+            {
+                anglesDataFile.Write(string.Format("{0:0.00000000}", vect_t[i]) + "\t");
+
+                foreach(List<JointType> triplet in WantedAngles)
+                {
+                    anglesDataFile.Write(jointAngle(new double[] {
+                        (Xi[i][wantedJoints.IndexOf(triplet[1])] - Xi[i][wantedJoints.IndexOf(triplet[0])]),
+                        (Yi[i][wantedJoints.IndexOf(triplet[1])] - Yi[i][wantedJoints.IndexOf(triplet[0])]),
+                        (Zi[i][wantedJoints.IndexOf(triplet[1])] - Zi[i][wantedJoints.IndexOf(triplet[0])])},
+                                                    new double[] {
+                        (Xi[i][wantedJoints.IndexOf(triplet[2])] - Xi[i][wantedJoints.IndexOf(triplet[0])]),
+                        (Yi[i][wantedJoints.IndexOf(triplet[2])] - Yi[i][wantedJoints.IndexOf(triplet[0])]),
+                        (Zi[i][wantedJoints.IndexOf(triplet[2])] - Zi[i][wantedJoints.IndexOf(triplet[0])])})
+                        .ToString().PadRight(16,'0') + "\t");
+                }
+
+                anglesDataFile.WriteLine();
+            }
+
+            anglesDataFile.Close();
+        }
+
+        /// <summary>
         /// Give RGB values of required pixel in image
         /// </summary>
         /// <param name="imageFrame">Image color frame</param>
@@ -255,21 +454,60 @@ namespace PL.Kinect
         /// <summary>
         /// Calculate angle between three joints
         /// </summary>
-        /// <param name="targetJoint">Center joint of the angle</param>
+        /// <param name="middleJoint">Center joint of the angle</param>
         /// <param name="connectedJoint1">Joint at one extremity of a bone linked to center joint</param>
         /// <param name="connectedJoint2">Joint at one extremity of another bone linked to center joint</param>
         /// <returns>Double value of the angle in degrees</returns>
-        private double jointAngle(Joint targetJoint, Joint connectedJoint1, Joint connectedJoint2)
+        private double jointAngle(Joint middleJoint, Joint connectedJoint1, Joint connectedJoint2)
         {
-            double[] vector1 = new double[3] { connectedJoint1.Position.X - targetJoint.Position.X, connectedJoint1.Position.Y - targetJoint.Position.Y, connectedJoint1.Position.Z - targetJoint.Position.Z };
-            double[] vector2 = new double[3] { connectedJoint2.Position.X - targetJoint.Position.X, connectedJoint2.Position.Y - targetJoint.Position.Y, connectedJoint2.Position.Z - targetJoint.Position.Z };
+            double[] vector1 = new double[3] { connectedJoint1.Position.X - middleJoint.Position.X, connectedJoint1.Position.Y - middleJoint.Position.Y, connectedJoint1.Position.Z - middleJoint.Position.Z };
+            double[] vector2 = new double[3] { connectedJoint2.Position.X - middleJoint.Position.X, connectedJoint2.Position.Y - middleJoint.Position.Y, connectedJoint2.Position.Z - middleJoint.Position.Z };
+            
+            return (360 * Math.Acos(scalarProduct(vector1,vector2) / (norm2(vector1)*norm2(vector2))) / (2 * Math.PI));
+        }
 
-            double scalarProduct = vector1[0] * vector2[0] + vector1[1] * vector2[1] + vector1[2] * vector2[2];
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="vector1"></param>
+        /// <param name="vector2"></param>
+        /// <returns></returns>
+        private double jointAngle(double[] vector1, double[]vector2)
+        {
+            return (360 * Math.Acos(scalarProduct(vector1, vector2) / (norm2(vector1) * norm2(vector2))) / (2 * Math.PI));
+        }
 
-            double norm1 = Math.Sqrt(vector1[0] * vector1[0] + vector1[1] * vector1[1] + vector1[2] * vector1[2]);
-            double norm2 = Math.Sqrt(vector2[0] * vector2[0] + vector2[1] * vector2[1] + vector2[2] * vector2[2]);
+        /// <summary>
+        /// Calculate scalar product of of two vectors (must be the same dimension)
+        /// </summary>
+        /// <param name="vector1">First vector</param>
+        /// <param name="vector2">Second vector</param>
+        /// <returns>Scalar result</returns>
+        public double scalarProduct(double[] vector1, double[] vector2)
+        {
+            double result = 0;
 
-            return (360 * Math.Acos((scalarProduct / (norm1 * norm2)))) / (2 * Math.PI);
+            if(vector1.Length != vector2.Length)
+            {
+                System.Console.WriteLine("ERROR : Trying to process scalar product of vectors of different dimensions !");
+                return 0;
+            }
+
+            for(int i = 0 ; i < vector1.Length ; i++)
+            {
+                result += (vector1[i]*vector2[i]);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Calculate the eucilian norm of a vector
+        /// </summary>
+        /// <param name="vector">Vector</param>
+        /// <returns>Norm</returns>
+        public double norm2(double[] vector)
+        {
+            return Math.Sqrt(scalarProduct(vector,vector));
         }
     }
 }

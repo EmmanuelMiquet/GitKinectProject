@@ -82,10 +82,17 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         }
 
         /// <summary>
-        /// Initializes a stram to write joints in a file
+        /// Initializes a stream to write joints in a file
         /// </summary>
         TextWriter TAB = new StreamWriter("pointsCapture.txt");
         TextWriter jointsLegend = new StreamWriter("jointsLegend.txt");
+
+        /// <summary>
+        /// Initializes a stream to write angles in a files
+        /// </summary>
+        string anglesLegendPath = "anglesLegend.txt";
+        string anglesDataPath = "anglesData.txt";
+        string bonesLengthPath = "bonesLength.txt";
 
         /// <summary>
         /// New list of joints that we want to track
@@ -233,6 +240,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             }
             TAB.Close();
             jointsLegend.Close();
+
+            tools.manageAngles(anglesLegendPath, bonesLengthPath, anglesDataPath, wantedJoints);
         }
 
         /// <summary>
