@@ -19,11 +19,6 @@ namespace PL.Kinect
         float t = 0;
 
         /// <summary>
-        /// Temporary variable
-        /// </summary>
-        string time , coordinates;
-
-        /// <summary>
         /// List storing time values in float format
         /// </summary>
         List<float> vect_t = new List<float>();
@@ -176,33 +171,42 @@ namespace PL.Kinect
         /// <param name="TAB">File in which we want to write</param>
         public void joints2fileRAW(string TABpath, string jointsLegendPath, List<JointType> wantedJoints)
         {
-            TextWriter TAB = new StreamWriter(TABpath);
-            TextWriter jointsLegend = new StreamWriter(jointsLegendPath);
+            TextWriter TAB = new StreamWriter(TABpath); //Creation of the file
+            
+            //pointsCapture header creation
+            TAB.Write("%         \t\t");
+            foreach (JointType joint in wantedJoints)
+            {
+                TAB.Write(joint.ToString().PadRight(14) + "\t".PadRight(6) + "\t".PadRight(10) + "\t\t");
+            }
+            TAB.Write("\n% Time    \t\t");
+            foreach (JointType joint in wantedJoints)
+            {
+                TAB.Write("    X".PadRight(10) + "\t" + "    Y".PadRight(10) + "\t" + "    Z".PadRight(10) + "\t\t");
+            }
+            TAB.WriteLine();
 
+            //pointsCapture filling
             if (vect_t.Count != 0)
             {
                 for (int i = 0; i < vect_t.Count; i++)
                 {
-                    time = string.Format("{0:0.00000000}", vect_t[i]);
-                    TAB.Write(time.Replace(",", ".")); //Go to next line and print t ("time")
+                    TAB.Write(string.Format("{0:0.00000000}", vect_t[i]).Replace(",", ".")); //Go to next line and print t ("time")
                     for (int j = 0; j < Xi[i].Count; j++)
                     {
-                        coordinates = coordinates + "\t" + string.Format("{0:0.00000000}", Xi[i][j]);
-                        coordinates = coordinates + "\t" + string.Format("{0:0.00000000}", Yi[i][j]);
-                        coordinates = coordinates + "\t" + string.Format("{0:0.00000000}", Zi[i][j]);
+                        TAB.Write(("\t\t" + string.Format("{0:0.00000000}", Xi[i][j]) + "\t" + string.Format("{0:0.00000000}", Yi[i][j]) + "\t" + string.Format("{0:0.00000000}", Zi[i][j])).Replace(",", "."));
                     }
-                    TAB.Write(coordinates.Replace(",", ".") + "\n");
-                    coordinates = null;
+                    TAB.WriteLine();
                 }
             }
+            TAB.Close();
 
-            //Write the name of tracked joints for legend
+            //Create and fill in the jointsLegend file
+            TextWriter jointsLegend = new StreamWriter(jointsLegendPath); 
             foreach (JointType joint in wantedJoints)
             {
                 jointsLegend.WriteLine(joint.ToString().PadRight(14));
             }
-
-            TAB.Close();
             jointsLegend.Close();
         }
 
@@ -250,7 +254,7 @@ namespace PL.Kinect
                     }
                 }
             }
-            return (t - 1) / 30;
+            return (t - 1) / 30; //Return current time for visualisation on graphical interface
         }
 
         /// <summary>
@@ -362,34 +366,43 @@ namespace PL.Kinect
         /// <param name="TAB">File in which we want to write</param>
         public void joints2file(string TABpath, string jointsLegendPath, List<JointType> wantedJoints)
         {
-            TextWriter TAB = new StreamWriter(TABpath);
-            TextWriter jointsLegend = new StreamWriter(jointsLegendPath);
+            TextWriter TAB = new StreamWriter(TABpath); //Creation of the file
 
+            //Header creation
+            TAB.Write("%         \t\t");
+            foreach (JointType joint in wantedJoints)
+            {
+                TAB.Write(joint.ToString().PadRight(14) + "\t".PadRight(6) + "\t".PadRight(10) + "\t\t");
+            }
+            TAB.Write("\n% Time    \t\t");
+            foreach (JointType joint in wantedJoints)
+            {
+                TAB.Write("    X".PadRight(10) + "\t" + "    Y".PadRight(10) + "\t" + "    Z".PadRight(10) + "\t\t");
+            }
+            TAB.WriteLine();
+
+            //pointsCapture filling
             if (vect_t.Count != 0)
             {
                 cleanSingularity(Xi[0].Count);
                 for (int i = 0; i < vect_t.Count; i++)
                 {
-                    time = string.Format("{0:0.00000000}", vect_t[i]);
-                    TAB.Write(time.Replace(",", ".")); //Go to next line and print t ("time")
+                    TAB.Write(string.Format("{0:0.00000000}", vect_t[i]).Replace(",", ".")); //Go to next line and print t ("time")
                     for (int j = 0; j < Xi[i].Count; j++)
                     {
-                        coordinates = coordinates + "\t" + string.Format("{0:0.00000000}", Xi[i][j]);
-                        coordinates = coordinates + "\t" + string.Format("{0:0.00000000}", Yi[i][j]);
-                        coordinates = coordinates + "\t" + string.Format("{0:0.00000000}", Zi[i][j]);
+                        TAB.Write(("\t\t" + string.Format("{0:0.00000000}", Xi[i][j]) + "\t" + string.Format("{0:0.00000000}", Yi[i][j]) + "\t" + string.Format("{0:0.00000000}", Zi[i][j])).Replace(",","."));
                     }
-                    TAB.Write(coordinates.Replace(",", ".") + "\n");
-                    coordinates = null;
+                    TAB.WriteLine();
                 }
             }
+            TAB.Close();
 
-            //Write the name of tracked joints for legend
+            //Create and fill in the jointsLegend file
+            TextWriter jointsLegend = new StreamWriter(jointsLegendPath);
             foreach (JointType joint in wantedJoints)
             {
                 jointsLegend.WriteLine(joint.ToString().PadRight(14));
             }
-
-            TAB.Close();
             jointsLegend.Close();
         }
 
@@ -502,7 +515,33 @@ namespace PL.Kinect
             initWantedAngles(anglesLegendPath, wantedJoints);
             bonesLength(bonesLengthPath, wantedJoints);
 
-            for(int i = 0 ; i < vect_t.Count ; i++)
+            //Header creation
+            anglesDataFile.Write("%         \t");
+            foreach (List<JointType> triplet in WantedAngles)
+            {
+                anglesDataFile.Write(triplet[0].ToString().PadRight(16) + "\t");
+            }
+            anglesDataFile.WriteLine();
+            anglesDataFile.Write("%         \t");
+            foreach (List<JointType> triplet in WantedAngles)
+            {
+                anglesDataFile.Write(triplet[1].ToString().PadRight(16) + "\t");
+            }
+            anglesDataFile.WriteLine();
+            anglesDataFile.Write("%         \t");
+            foreach (List<JointType> triplet in WantedAngles)
+            {
+                anglesDataFile.Write(triplet[2].ToString().PadRight(16) + "\t");
+            }
+            anglesDataFile.Write("\n% Time    \t\t");
+            foreach (List<JointType> triplet in WantedAngles)
+            {
+                anglesDataFile.Write("Theta (Deg)".PadRight(16) + "\t");
+            }
+            anglesDataFile.WriteLine();
+
+            //anglesData filling
+            for (int i = 0 ; i < vect_t.Count ; i++)
             {
                 anglesDataFile.Write(string.Format("{0:0.00000000}", vect_t[i]).Replace(",",".") + "\t");
 
@@ -518,10 +557,8 @@ namespace PL.Kinect
                         (Zi[i][wantedJoints.IndexOf(triplet[2])] - Zi[i][wantedJoints.IndexOf(triplet[0])])})
                         .ToString().PadRight(16,'0').Replace(",", ".") + "\t");
                 }
-
                 anglesDataFile.WriteLine();
             }
-
             anglesDataFile.Close();
         }
 
