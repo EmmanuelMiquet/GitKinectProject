@@ -10,7 +10,6 @@ function [] = KinectTimeAccPlot(t,dx2,dy2,dz2,nbPoints,legende)
     title('Accélérations horizontales au cours du temps');
     xlabel('t (s)');
     ylabel('d^2X');
-    legend(legende);
     
     subplot(3,1,2);
     hold all;
@@ -21,7 +20,6 @@ function [] = KinectTimeAccPlot(t,dx2,dy2,dz2,nbPoints,legende)
     title('Accélérations verticales au cours du temps');
     xlabel('t (s)');
     ylabel('d^2Y');
-    legend(legende);
 
     subplot(3,1,3);
     hold all;

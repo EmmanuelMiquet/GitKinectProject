@@ -10,7 +10,6 @@ function [] = KinectTimePosPlot(t,X,Y,Z,nbPoints,legende)
     title('Abscisses au cours du temps');
     xlabel('t (s)');
     ylabel('X');
-    legend(legende);
     
     subplot(3,1,2);
     hold all;
@@ -21,7 +20,6 @@ function [] = KinectTimePosPlot(t,X,Y,Z,nbPoints,legende)
     title('Ordonnées au cours du temps');
     xlabel('t (s)');
     ylabel('Y');
-    legend(legende);
 
     subplot(3,1,3);
     hold all;

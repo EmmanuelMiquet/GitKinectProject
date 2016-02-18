@@ -10,7 +10,6 @@ function [] = KinectTimeVitPlot(t,dx,dy,dz,nbPoints,legende)
     title('Vitesses horizontales au cours du temps');
     xlabel('t (s)');
     ylabel('dX');
-    legend(legende);
     
     subplot(3,1,2);
     hold all;
@@ -21,7 +20,6 @@ function [] = KinectTimeVitPlot(t,dx,dy,dz,nbPoints,legende)
     title('Vitesses verticales au cours du temps');
     xlabel('t (s)');
     ylabel('dY');
-    legend(legende);
 
     subplot(3,1,3);
     hold all;

@@ -3,7 +3,10 @@ close all;
 clear all;
 clc;
 
-load('../SkeletonTracking-WPF/bin/Debug/pointsCapture.txt');
+%Index of the file we want to load
+indexFile = 0;
+
+pointsCapture = load(strcat('../SkeletonTracking-WPF/bin/Debug/KinectCapture/', num2str(indexFile), '_pointsCapture.txt'));
 t = pointsCapture(:,1);
 dt = t(2)-t(1);
 nbPoints = ((length(pointsCapture(1,:))-1)/3);
@@ -13,11 +16,13 @@ for i=1:nbPoints
     Z(:,i) = pointsCapture(:,3*i+1);
 end
 
-fiLegend = fopen('../SkeletonTracking-WPF/bin/Debug/jointsLegend.txt');
+% Load for older versions of MATLAB
+fiLegend = fopen(strcat('../SkeletonTracking-WPF/bin/Debug/KinectCapture/', num2str(indexFile), '_jointsLegend.txt'));
 legende = textscan(fiLegend,'%s');
 fclose(fiLegend);
 legende = legende{1};
 
+% Load for newer versions of MATLAB
 %legende = table2array(readtable('../SkeletonTracking-WPF/bin/Debug/jointsLegend.txt','ReadVariableNames',false));
 
 %% Traces des positions dans l'espace
