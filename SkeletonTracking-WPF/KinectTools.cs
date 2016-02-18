@@ -84,6 +84,11 @@ namespace PL.Kinect
         List<JointType> AngleHipRight = new List<JointType>(3);
 
         /// <summary>
+        /// List to store right arm related joints for angle calculation (composed of 3 JointType)
+        /// </summary>
+        List<JointType> AngleShoulersRightArm = new List<JointType>(3);
+
+        /// <summary>
         /// List to store left elbow related joints for angle calculation (composed of 3 JointType)
         /// </summary>
         List<JointType> AngleElbowLeft = new List<JointType>(3);
@@ -102,6 +107,11 @@ namespace PL.Kinect
         /// List to store left hip related joints for angle calculation (composed of 3 JointType)
         /// </summary>
         List<JointType> AngleHipLeft = new List<JointType>(3);
+
+        /// <summary>
+        /// List to store left arm related joints for angle calculation (composed of 3 JointType)
+        /// </summary>
+        List<JointType> AngleShoulersLeftArm = new List<JointType>(3);
 
         /// <summary>
         /// List of angles user can study from wantedJoints
@@ -137,6 +147,10 @@ namespace PL.Kinect
             AngleHipRight.Add(JointType.HipCenter);
             AngleHipRight.Add(JointType.KneeRight);
 
+            AngleShoulersRightArm.Add(JointType.ShoulderRight);
+            AngleShoulersRightArm.Add(JointType.ShoulderLeft);
+            AngleShoulersRightArm.Add(JointType.ElbowRight);
+
             AngleElbowLeft.Add(JointType.ElbowLeft);
             AngleElbowLeft.Add(JointType.WristLeft);
             AngleElbowLeft.Add(JointType.ShoulderLeft);
@@ -153,16 +167,22 @@ namespace PL.Kinect
             AngleHipLeft.Add(JointType.HipCenter);
             AngleHipLeft.Add(JointType.KneeLeft);
 
+            AngleShoulersLeftArm.Add(JointType.ShoulderLeft);
+            AngleShoulersLeftArm.Add(JointType.ShoulderRight);
+            AngleShoulersLeftArm.Add(JointType.ElbowLeft);
+
             WantedAngles.Add(AngleNeck);
             WantedAngles.Add(AngleSpine);
             WantedAngles.Add(AngleElbowRight);
             WantedAngles.Add(AngleShoulderRight);
             WantedAngles.Add(AngleKneeRight);
             WantedAngles.Add(AngleHipRight);
+            WantedAngles.Add(AngleShoulersRightArm);
             WantedAngles.Add(AngleElbowLeft);
             WantedAngles.Add(AngleShoulderLeft);
             WantedAngles.Add(AngleKneeLeft);
             WantedAngles.Add(AngleHipLeft);
+            WantedAngles.Add(AngleShoulersLeftArm);
         }
 
         /// <summary>
@@ -654,6 +674,22 @@ namespace PL.Kinect
         public double norm2(double[] vector)
         {
             return Math.Sqrt(scalarProduct(vector,vector));
+        }
+
+        /// <summary>
+        /// Clear all the kinect tools variables for a fresh acquisition
+        /// </summary>
+        public void clearData()
+        {
+            vect_t.Clear();
+            Xi.Clear();
+            Yi.Clear();
+            Zi.Clear();
+            Xj.Clear();
+            Yj.Clear();
+            Zj.Clear();
+            t = 0;
+            flag = 0;
         }
     }
 }

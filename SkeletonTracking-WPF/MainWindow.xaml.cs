@@ -82,29 +82,34 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         }
 
         /// <summary>
-        /// Stream to write joints in a file
+        /// Path of the capture folder
         /// </summary>
-        string pointsCapturePath = "pointsCapture.txt";
-        
+        static string folderPath = "KinectCapture/";
+
         /// <summary>
-        /// Stream to write the joints legend
+        /// Path to write joints in a file
         /// </summary>
-        string jointsLegendPath = "jointsLegend.txt";
+        string pointsCapturePath = folderPath + "pointsCapture.txt";
+
+        /// <summary>
+        /// Path to write the joints legend
+        /// </summary>
+        string jointsLegendPath = folderPath + "jointsLegend.txt";
 
         /// <summary>
         /// Path to write angles in a file
         /// </summary>
-        string anglesDataPath = "anglesData.txt";
+        string anglesDataPath = folderPath + "anglesData.txt";
         
         /// <summary>
         /// Path to write the angles legend
         /// </summary>
-        string anglesLegendPath = "anglesLegend.txt";
+        string anglesLegendPath = folderPath + "anglesLegend.txt";
 
         /// <summary>
         /// Path to write the bones length
         /// </summary>
-        string bonesLengthPath = "bonesLength.txt";
+        string bonesLengthPath = folderPath + "bonesLength.txt";
 
         /// <summary>
         /// List of joints that we want to track
@@ -115,6 +120,21 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// Personnal set of tools for our project
         /// </summary>
         KinectTools tools = new KinectTools();
+
+        /// <summary>
+        /// File number for the name header of the file
+        /// </summary>
+        int fileIdentifier = 0;
+
+        /// <summary>
+        /// Variable for display all joints button
+        /// </summary>
+        bool displayAllJoints = false;
+
+        /// <summary>
+        /// Variable for testify that the capture is on
+        /// </summary>
+        bool captureOn = false;
 
         /// <summary>
         /// Draws indicators to show which edges are clipping skeleton data
@@ -209,6 +229,17 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 this.statusBarText.Text = Properties.Resources.NoKinectReady;
             }
+
+            //Create capture directory
+            if (Directory.Exists(folderPath))
+            {
+                foreach (string file in Directory.GetFiles(folderPath))
+                {
+                    FileInfo tmp = new FileInfo(file);
+                    tmp.Delete();
+                }
+            }
+            Directory.CreateDirectory(folderPath);
         }
 
         /// <summary>
@@ -222,12 +253,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 this.sensor.Stop();
             }
-
-            //Write joints in a file
-            tools.joints2file(pointsCapturePath,jointsLegendPath,wantedJoints);
-
-            //Calculate and write angles and bone length
-            tools.manageAngles(anglesLegendPath, bonesLengthPath, anglesDataPath, wantedJoints);
         }
 
         /// <summary>
@@ -334,15 +359,38 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// <param name="e">event arguments</param>
         private void CheckBoxSeatedModeChanged(object sender, RoutedEventArgs e)
         {
-            if (null != this.sensor)
+            if (!captureOn)
             {
-                if (this.checkBoxSeatedMode.IsChecked.GetValueOrDefault())
+                if (null != this.sensor)
                 {
-                    this.sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
-                }
-                else
-                {
-                    this.sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
+                    if (this.checkBoxSeatedMode.IsChecked.GetValueOrDefault())
+                    {
+                        this.sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
+                        this.HipLeft.IsChecked = false;
+                        this.KneeLeft.IsChecked = false;
+                        this.AnkleLeft.IsChecked = false;
+                        this.FootLeft.IsChecked = false;
+                        this.HipRight.IsChecked = false;
+                        this.KneeRight.IsChecked = false;
+                        this.AnkleRight.IsChecked = false;
+                        this.FootRight.IsChecked = false;
+                        this.HipCenter.IsChecked = false;
+                        this.Spine.IsChecked = false;
+                    }
+                    else
+                    {
+                        this.sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
+                        this.HipLeft.IsChecked = true;
+                        this.KneeLeft.IsChecked = true;
+                        this.AnkleLeft.IsChecked = true;
+                        this.FootLeft.IsChecked = false;
+                        this.HipRight.IsChecked = true;
+                        this.KneeRight.IsChecked = true;
+                        this.AnkleRight.IsChecked = true;
+                        this.FootRight.IsChecked = false;
+                        this.HipCenter.IsChecked = true;
+                        this.Spine.IsChecked = true;
+                    }
                 }
             }
         }
@@ -352,7 +400,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
-        bool captureOn = false;
         private void CheckBoxCaptureOn(object sender, RoutedEventArgs e)
         {
             if (null != this.sensor)
@@ -361,6 +408,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 {
                     captureOn = true;
                     REC.Visibility = Visibility.Visible;
+                    this.NewFiles.IsEnabled = false;
+                    this.ProcessData.IsEnabled = false;
+                    this.checkBoxSeatedMode.IsEnabled = false;
+
                     this.HipCenter.IsEnabled = false;
                     this.Spine.IsEnabled = false;
                     this.ShoulderCenter.IsEnabled = false;
@@ -386,6 +437,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 {
                     captureOn = false;
                     REC.Visibility = Visibility.Hidden;
+                    this.ProcessData.IsEnabled = true;
                 }
             }
         }
@@ -395,7 +447,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
-        bool displayAllJoints = false;
         private void CheckBoxDisplayAllJoints(object sender, RoutedEventArgs e)
         {
             if (this.displayAll.IsChecked.GetValueOrDefault())
@@ -657,6 +708,84 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     wantedJoints.Remove(JointType.FootRight);
                 }
             }
+        }
+
+        /// <summary>
+        /// Handles the the action of the button Process Data
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClickProcessData(object sender, RoutedEventArgs e)
+        {
+            //Modify the names of the differents files
+            if (fileIdentifier == 0)
+            {
+                pointsCapturePath = pointsCapturePath.Replace(folderPath,folderPath + fileIdentifier.ToString() + "_");
+                jointsLegendPath = jointsLegendPath.Replace(folderPath, folderPath + fileIdentifier.ToString() + "_");
+                anglesDataPath = anglesDataPath.Replace(folderPath, folderPath + fileIdentifier.ToString() + "_");
+                anglesLegendPath = anglesLegendPath.Replace(folderPath, folderPath + fileIdentifier.ToString() + "_");
+                bonesLengthPath = bonesLengthPath.Replace(folderPath, folderPath + fileIdentifier.ToString() + "_");
+            }
+            else
+            {
+                pointsCapturePath = pointsCapturePath.Replace(folderPath + (fileIdentifier-1).ToString(), folderPath + fileIdentifier.ToString());
+                jointsLegendPath = jointsLegendPath.Replace(folderPath + (fileIdentifier - 1).ToString(), folderPath + fileIdentifier.ToString());
+                anglesDataPath = anglesDataPath.Replace(folderPath + (fileIdentifier - 1).ToString(), folderPath + fileIdentifier.ToString());
+                anglesLegendPath = anglesLegendPath.Replace(folderPath + (fileIdentifier - 1).ToString(), folderPath + fileIdentifier.ToString());
+                bonesLengthPath = bonesLengthPath.Replace(folderPath + (fileIdentifier - 1).ToString(), folderPath + fileIdentifier.ToString());
+            }
+
+            //Write joints in a file
+            tools.joints2file(pointsCapturePath, jointsLegendPath, wantedJoints);
+
+            //Calculate and write angles and bone length
+            tools.manageAngles(anglesLegendPath, bonesLengthPath, anglesDataPath, wantedJoints);
+
+            //Clear all the local variables in knect tools
+            tools.clearData();
+
+            //Unabling to take a new capture (and other buttons)
+            this.Capture_On.IsEnabled = false;
+            this.ProcessData.IsEnabled = false;
+            this.NewFiles.IsEnabled = true;
+        }
+
+        /// <summary>
+        /// Handles the the action of the button New Files
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClickNewFiles(object sender, RoutedEventArgs e)
+        {
+            //Increment the file identifier number
+            fileIdentifier++;
+
+            //Enabling/Disabling buttons and checkboxes
+            this.Capture_On.IsEnabled = true;
+            this.NewFiles.IsEnabled = false;
+
+            this.HipCenter.IsEnabled = true;
+            this.Spine.IsEnabled = true;
+            this.ShoulderCenter.IsEnabled = true;
+            this.Head.IsEnabled = true;
+            this.ShoulderLeft.IsEnabled = true;
+            this.ElbowLeft.IsEnabled = true;
+            this.WristLeft.IsEnabled = true;
+            this.HandLeft.IsEnabled = true;
+            this.ShoulderRight.IsEnabled = true;
+            this.ElbowRight.IsEnabled = true;
+            this.WristRight.IsEnabled = true;
+            this.HandRight.IsEnabled = true;
+            this.HipLeft.IsEnabled = true;
+            this.KneeLeft.IsEnabled = true;
+            this.AnkleLeft.IsEnabled = true;
+            this.FootLeft.IsEnabled = true;
+            this.HipRight.IsEnabled = true;
+            this.KneeRight.IsEnabled = true;
+            this.AnkleRight.IsEnabled = true;
+            this.FootRight.IsEnabled = true;
+
+            this.checkBoxSeatedMode.IsEnabled = true;
         }
     }
 }
