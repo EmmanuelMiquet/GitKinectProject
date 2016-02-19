@@ -186,23 +186,18 @@ namespace PL.Kinect
         }
 
         /// <summary>
-        /// Extracts skeleton points RAW potsiton to a file
+        /// Write the RAW position of the joints in a file
         /// </summary>
         /// <param name="TAB">File in which we want to write</param>
         public void joints2fileRAW(string TABpath, string jointsLegendPath, List<JointType> wantedJoints)
         {
             TextWriter TAB = new StreamWriter(TABpath); //Creation of the file
-            
-            //pointsCapture header creation
-            TAB.Write("%         \t\t");
+
+            //Header creation
+            TAB.Write("%Time     \t");
             foreach (JointType joint in wantedJoints)
             {
-                TAB.Write(joint.ToString().PadRight(14) + "\t".PadRight(6) + "\t".PadRight(10) + "\t\t");
-            }
-            TAB.Write("\n% Time    \t\t");
-            foreach (JointType joint in wantedJoints)
-            {
-                TAB.Write("    X".PadRight(10) + "\t" + "    Y".PadRight(10) + "\t" + "    Z".PadRight(10) + "\t\t");
+                TAB.Write((joint.ToString() + "-X").PadRight(16) + "\t" + (joint.ToString() + "-Y").PadRight(16) + "\t" + (joint.ToString() + "-Z").PadRight(16) + "\t");
             }
             TAB.WriteLine();
 
@@ -214,7 +209,7 @@ namespace PL.Kinect
                     TAB.Write(string.Format("{0:0.00000000}", vect_t[i]).Replace(",", ".")); //Go to next line and print t ("time")
                     for (int j = 0; j < Xi[i].Count; j++)
                     {
-                        TAB.Write(("\t\t" + string.Format("{0:0.00000000}", Xi[i][j]) + "\t" + string.Format("{0:0.00000000}", Yi[i][j]) + "\t" + string.Format("{0:0.00000000}", Zi[i][j])).Replace(",", "."));
+                        TAB.Write(("\t" + string.Format("{0:0.00000000}", Xi[i][j]).PadRight(16) + "\t" + string.Format("{0:0.00000000}", Yi[i][j]).PadRight(16) + "\t" + string.Format("{0:0.00000000}", Zi[i][j]).PadRight(16)).Replace(",", "."));
                     }
                     TAB.WriteLine();
                 }
@@ -231,7 +226,7 @@ namespace PL.Kinect
         }
 
         /// <summary>
-        /// Extracts skeleton points RAW potsiton to several lists
+        /// Extracts skeleton points potsiton to several lists
         /// </summary>
         /// <param name="skeleton">Skeleton detected in the current frame</param>
         /// <param name="wantedJoints">List of wanted joints to put in the file</param>
@@ -381,7 +376,7 @@ namespace PL.Kinect
         }
 
         /// <summary>
-        /// Extracts skeleton points processed potsiton to a file
+        /// Write the position of the joints in a file
         /// </summary>
         /// <param name="TAB">File in which we want to write</param>
         public void joints2file(string TABpath, string jointsLegendPath, List<JointType> wantedJoints)
@@ -389,15 +384,10 @@ namespace PL.Kinect
             TextWriter TAB = new StreamWriter(TABpath); //Creation of the file
 
             //Header creation
-            TAB.Write("%         \t\t");
+            TAB.Write("%Time     \t");
             foreach (JointType joint in wantedJoints)
             {
-                TAB.Write(joint.ToString().PadRight(14) + "\t".PadRight(6) + "\t".PadRight(10) + "\t\t");
-            }
-            TAB.Write("\n% Time    \t\t");
-            foreach (JointType joint in wantedJoints)
-            {
-                TAB.Write("    X".PadRight(10) + "\t" + "    Y".PadRight(10) + "\t" + "    Z".PadRight(10) + "\t\t");
+                TAB.Write((joint.ToString() + "-X").PadRight(16) + "\t" + (joint.ToString() + "-Y").PadRight(16) + "\t" + (joint.ToString() + "-Z").PadRight(16) + "\t");
             }
             TAB.WriteLine();
 
@@ -410,7 +400,7 @@ namespace PL.Kinect
                     TAB.Write(string.Format("{0:0.00000000}", vect_t[i]).Replace(",", ".")); //Go to next line and print t ("time")
                     for (int j = 0; j < Xi[i].Count; j++)
                     {
-                        TAB.Write(("\t\t" + string.Format("{0:0.00000000}", Xi[i][j]) + "\t" + string.Format("{0:0.00000000}", Yi[i][j]) + "\t" + string.Format("{0:0.00000000}", Zi[i][j])).Replace(",","."));
+                        TAB.Write(("\t" + string.Format("{0:0.00000000}", Xi[i][j]).PadRight(16) + "\t" + string.Format("{0:0.00000000}", Yi[i][j]).PadRight(16) + "\t" + string.Format("{0:0.00000000}", Zi[i][j]).PadRight(16)).Replace(",","."));
                     }
                     TAB.WriteLine();
                 }
@@ -424,6 +414,42 @@ namespace PL.Kinect
                 jointsLegend.WriteLine(joint.ToString().PadRight(14));
             }
             jointsLegend.Close();
+        }
+
+        /// <summary>
+        /// Write the relative position of the joints in a file (Spine based)
+        /// </summary>
+        /// <param name="TABpath"></param>
+        /// <param name="wantedJoints"></param>
+        public void relativeJoints2file(string TABpath, List<JointType> wantedJoints)
+        {
+            if (wantedJoints.Contains(JointType.Spine))
+            {
+                TextWriter TAB = new StreamWriter(TABpath); //Creation of the file
+
+                //Header creation
+                TAB.Write("%Time     \t");
+                foreach (JointType joint in wantedJoints)
+                {
+                    TAB.Write((joint.ToString() + "-X").PadRight(16) + "\t" + (joint.ToString() + "-Y").PadRight(16) + "\t" + (joint.ToString() + "-Z").PadRight(16) + "\t");
+                }
+                TAB.WriteLine();
+
+                //relativePointsCapture filling
+                if (vect_t.Count != 0)
+                {
+                    for (int i = 0; i < vect_t.Count; i++)
+                    {
+                        TAB.Write(string.Format("{0:0.00000000}", vect_t[i]).Replace(",", ".")); //Go to next line and print t ("time")
+                        for (int j = 0; j < Xi[i].Count; j++)
+                        {
+                            TAB.Write(("\t" + string.Format("{0:0.00000000}", Xi[i][j]-Xi[i][wantedJoints.IndexOf(JointType.Spine)]).PadRight(16) + "\t" + string.Format("{0:0.00000000}", Yi[i][j] - Yi[i][wantedJoints.IndexOf(JointType.Spine)]).PadRight(16) + "\t" + string.Format("{0:0.00000000}", Zi[i][j] - Zi[i][wantedJoints.IndexOf(JointType.Spine)]).PadRight(16)).Replace(",", "."));
+                        }
+                        TAB.WriteLine();
+                    }
+                }
+                TAB.Close();
+            }
         }
 
         /// <summary>

@@ -91,6 +91,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// </summary>
         string pointsCapturePath = folderPath + "pointsCapture.txt";
 
+        string relativePointsCapturePath = folderPath + "relativePointsCapture.txt";
+
         /// <summary>
         /// Path to write the joints legend
         /// </summary>
@@ -408,8 +410,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 {
                     captureOn = true;
                     REC.Visibility = Visibility.Visible;
+
                     this.NewFiles.IsEnabled = false;
                     this.ProcessData.IsEnabled = false;
+                    this.ClearCapture.IsEnabled = false;
                     this.checkBoxSeatedMode.IsEnabled = false;
 
                     this.HipCenter.IsEnabled = false;
@@ -438,6 +442,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     captureOn = false;
                     REC.Visibility = Visibility.Hidden;
                     this.ProcessData.IsEnabled = true;
+                    this.ClearCapture.IsEnabled = true;
                 }
             }
         }
@@ -485,11 +490,19 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     if (!wantedJoints.Contains(JointType.Spine))
                     {
                         wantedJoints.Add(JointType.Spine);
+                        if (this.WarningBox != null)
+                        {
+                            this.WarningBox.Visibility = Visibility.Hidden;
+                        }
                     }
                 }
                 else
                 {
                     wantedJoints.Remove(JointType.Spine);
+                    if (this.WarningBox != null)
+                    {
+                        this.WarningBox.Visibility = Visibility.Visible;
+                    }
                 }
 
                 if (this.ShoulderCenter != null && this.ShoulderCenter.IsChecked.GetValueOrDefault())
@@ -711,7 +724,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         }
 
         /// <summary>
-        /// Handles the the action of the button Process Data
+        /// Process and write the data in the files on the press of the Process Data button
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -721,6 +734,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             if (fileIdentifier == 0)
             {
                 pointsCapturePath = pointsCapturePath.Replace(folderPath,folderPath + fileIdentifier.ToString() + "_");
+                relativePointsCapturePath = relativePointsCapturePath.Replace(folderPath, folderPath + fileIdentifier.ToString() + "_");
                 jointsLegendPath = jointsLegendPath.Replace(folderPath, folderPath + fileIdentifier.ToString() + "_");
                 anglesDataPath = anglesDataPath.Replace(folderPath, folderPath + fileIdentifier.ToString() + "_");
                 anglesLegendPath = anglesLegendPath.Replace(folderPath, folderPath + fileIdentifier.ToString() + "_");
@@ -729,6 +743,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             else
             {
                 pointsCapturePath = pointsCapturePath.Replace(folderPath + (fileIdentifier-1).ToString(), folderPath + fileIdentifier.ToString());
+                relativePointsCapturePath = relativePointsCapturePath.Replace(folderPath + (fileIdentifier - 1).ToString(), folderPath + fileIdentifier.ToString());
                 jointsLegendPath = jointsLegendPath.Replace(folderPath + (fileIdentifier - 1).ToString(), folderPath + fileIdentifier.ToString());
                 anglesDataPath = anglesDataPath.Replace(folderPath + (fileIdentifier - 1).ToString(), folderPath + fileIdentifier.ToString());
                 anglesLegendPath = anglesLegendPath.Replace(folderPath + (fileIdentifier - 1).ToString(), folderPath + fileIdentifier.ToString());
@@ -737,6 +752,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             //Write joints in a file
             tools.joints2file(pointsCapturePath, jointsLegendPath, wantedJoints);
+
+            //Write relative position in a file
+            tools.relativeJoints2file(relativePointsCapturePath, wantedJoints);
 
             //Calculate and write angles and bone length
             tools.manageAngles(anglesLegendPath, bonesLengthPath, anglesDataPath, wantedJoints);
@@ -747,11 +765,13 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             //Unabling to take a new capture (and other buttons)
             this.Capture_On.IsEnabled = false;
             this.ProcessData.IsEnabled = false;
+            this.ClearCapture.IsEnabled = false;
+
             this.NewFiles.IsEnabled = true;
         }
 
         /// <summary>
-        /// Handles the the action of the button New Files
+        /// Create new pathes (increment the file identifier) for the capture files on the press of the New Files button
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -760,9 +780,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             //Increment the file identifier number
             fileIdentifier++;
 
-            //Enabling/Disabling buttons and checkboxes
-            this.Capture_On.IsEnabled = true;
+            //Enable/Disable buttons and checkboxes
             this.NewFiles.IsEnabled = false;
+
+            this.Capture_On.IsEnabled = true;
+            this.checkBoxSeatedMode.IsEnabled = true;
 
             this.HipCenter.IsEnabled = true;
             this.Spine.IsEnabled = true;
@@ -784,8 +806,45 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.KneeRight.IsEnabled = true;
             this.AnkleRight.IsEnabled = true;
             this.FootRight.IsEnabled = true;
+        }
 
+        /// <summary>
+        /// Clear capture data points on the press of the ClearCapture button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClickClearCapture(object sender, RoutedEventArgs e)
+        {
+            //Clear the capture data
+            tools.clearData();
+
+            //Enable/Disable buttons and checkboxes
+            this.ClearCapture.IsEnabled = false;
+            this.ProcessData.IsEnabled = false;
+
+            this.Capture_On.IsEnabled = true;
             this.checkBoxSeatedMode.IsEnabled = true;
+
+            this.HipCenter.IsEnabled = true;
+            this.Spine.IsEnabled = true;
+            this.ShoulderCenter.IsEnabled = true;
+            this.Head.IsEnabled = true;
+            this.ShoulderLeft.IsEnabled = true;
+            this.ElbowLeft.IsEnabled = true;
+            this.WristLeft.IsEnabled = true;
+            this.HandLeft.IsEnabled = true;
+            this.ShoulderRight.IsEnabled = true;
+            this.ElbowRight.IsEnabled = true;
+            this.WristRight.IsEnabled = true;
+            this.HandRight.IsEnabled = true;
+            this.HipLeft.IsEnabled = true;
+            this.KneeLeft.IsEnabled = true;
+            this.AnkleLeft.IsEnabled = true;
+            this.FootLeft.IsEnabled = true;
+            this.HipRight.IsEnabled = true;
+            this.KneeRight.IsEnabled = true;
+            this.AnkleRight.IsEnabled = true;
+            this.FootRight.IsEnabled = true;
         }
     }
 }
