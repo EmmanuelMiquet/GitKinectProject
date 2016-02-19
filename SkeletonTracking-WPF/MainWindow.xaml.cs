@@ -846,5 +846,55 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.AnkleRight.IsEnabled = true;
             this.FootRight.IsEnabled = true;
         }
+
+        /// <summary>
+        /// Refresh the connection with the kinect to know if there is one ready
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClickRefreshConnection(object sender, RoutedEventArgs e)
+        {
+            foreach (var potentialSensor in KinectSensor.KinectSensors)
+            {
+                if (potentialSensor.Status == KinectStatus.Connected)
+                {
+                    this.sensor = potentialSensor;
+                    break;
+                }
+                else
+                {
+                    this.sensor = null;
+                }
+            }
+            if(KinectSensor.KinectSensors.Count == 0)
+            {
+                this.sensor = null;
+            }
+
+            if (null != this.sensor)
+            {
+                // Turn on the skeleton stream to receive skeleton frames
+                this.sensor.SkeletonStream.Enable();
+
+                // Add an event handler to be called whenever there is new color frame data
+                this.sensor.SkeletonFrameReady += this.SensorSkeletonFrameReady;
+
+                // Start the sensor!
+                try
+                {
+                    this.sensor.Start();
+                    this.statusBarText.Text = "Click 'Seated' to change skeletal pipeline type!";
+                }
+                catch (IOException)
+                {
+                    this.sensor = null;
+                }
+            }
+
+            if (null == this.sensor)
+            {
+                this.statusBarText.Text = Properties.Resources.NoKinectReady;
+            }
+        }
     }
 }
