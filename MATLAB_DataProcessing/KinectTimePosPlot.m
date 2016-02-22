@@ -1,0 +1,34 @@
+function [] = KinectTimePosPlot(t,X,Y,Z,nbPoints,legende)
+    figure;
+    
+    subplot(3,1,1);
+    hold all;
+    for i=1:nbPoints
+        plot(t,X(:,i));
+    end
+    hold off;
+    title('Abscisses au cours du temps');
+    xlabel('t (s)');
+    ylabel('X (m)');
+    
+    subplot(3,1,2);
+    hold all;
+    for i=1:nbPoints
+        plot(t,Y(:,i));
+    end
+    hold off;
+    title('Ordonnées au cours du temps');
+    xlabel('t (s)');
+    ylabel('Y (m)');
+
+    subplot(3,1,3);
+    hold all;
+    for i=1:nbPoints
+        plot(t,Z(:,i));
+    end
+    hold off;
+    title('Profondeurs au cours du temps');
+    xlabel('t (s)');
+    ylabel('Z (m)');
+    legend(legende);
+end
