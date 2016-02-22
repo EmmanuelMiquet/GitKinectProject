@@ -443,7 +443,7 @@ namespace PL.Kinect
                         TAB.Write(string.Format("{0:0.00000000}", vect_t[i]).Replace(",", ".")); //Go to next line and print t ("time")
                         for (int j = 0; j < Xi[i].Count; j++)
                         {
-                            TAB.Write(("\t" + string.Format("{0:0.00000000}", Xi[i][j]-Xi[i][wantedJoints.IndexOf(JointType.Spine)]).PadRight(16) + "\t" + string.Format("{0:0.00000000}", Yi[i][j] - Yi[i][wantedJoints.IndexOf(JointType.Spine)]).PadRight(16) + "\t" + string.Format("{0:0.00000000}", Zi[i][j] - Zi[i][wantedJoints.IndexOf(JointType.Spine)]).PadRight(16)).Replace(",", "."));
+                            TAB.Write(("\t" + string.Format("{0:0.00000000}", Xi[i][j]-Xi[i][wantedJoints.IndexOf(JointType.Spine)]).PadRight(16) + "\t" + string.Format("{0:0.00000000}", Yi[i][j]-Yi[i][wantedJoints.IndexOf(JointType.Spine)]).PadRight(16) + "\t" + string.Format("{0:0.00000000}", Zi[i][j]-Zi[i][wantedJoints.IndexOf(JointType.Spine)]).PadRight(16)).Replace(",", "."));
                         }
                         TAB.WriteLine();
                     }
