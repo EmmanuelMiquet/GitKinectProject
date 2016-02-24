@@ -1,9 +1,13 @@
 function [t,dt,nbAngles,Theta,legendeAngle] = KinectLoadAngles(captureFolderPath,indexFile)
+    
     % Chargement des angles
     anglesCapture = load(strcat(captureFolderPath, num2str(indexFile), '_anglesData.txt'));
     t = anglesCapture(:,1);
     dt = t(2)-t(1);
     nbAngles = length(anglesCapture(1,:))-1;
+    
+    Theta = zeros(length(t),nbAngles); % Initialisation de la matrice
+    
     for i=1:nbAngles
         Theta(:,i) = anglesCapture(:,i+1);
     end

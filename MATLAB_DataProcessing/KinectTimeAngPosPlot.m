@@ -1,4 +1,5 @@
 function [] = KinectTimeAngPosPlot(t,Theta,nbAngles,legendeAngle)
+    
     figure;
     hold all;
     for i=1:nbAngles
@@ -9,4 +10,5 @@ function [] = KinectTimeAngPosPlot(t,Theta,nbAngles,legendeAngle)
     xlabel('t (s)');
     ylabel('\Theta (Deg)');
     legend(legendeAngle);
+
 end

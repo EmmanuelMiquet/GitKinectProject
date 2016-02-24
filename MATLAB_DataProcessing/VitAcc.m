@@ -1,4 +1,5 @@
 function [d,d2] = VitAcc(x,dt)
+    
     d = zeros(length(x)-2,1);
 
     for i= 1:length(x)-2

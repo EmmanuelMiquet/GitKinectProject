@@ -1,4 +1,5 @@
 function [] = KinectTimeAccPlot(t,dx2,dy2,dz2,nbPoints,legende)
+    
     figure;
     
     subplot(3,1,1);
@@ -31,4 +32,5 @@ function [] = KinectTimeAccPlot(t,dx2,dy2,dz2,nbPoints,legende)
     xlabel('t (s)');
     ylabel('d^2Z/dt (m/s^2)');
     legend(legende);
+
 end

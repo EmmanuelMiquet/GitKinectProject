@@ -1,4 +1,5 @@
 function [] = KinectTimePosPlot(t,X,Y,Z,nbPoints,legende)
+    
     figure;
     
     subplot(3,1,1);
@@ -31,4 +32,5 @@ function [] = KinectTimePosPlot(t,X,Y,Z,nbPoints,legende)
     xlabel('t (s)');
     ylabel('Z (m)');
     legend(legende);
+
 end

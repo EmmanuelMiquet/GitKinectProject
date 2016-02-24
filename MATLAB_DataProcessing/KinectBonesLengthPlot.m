@@ -1,4 +1,5 @@
 function [] = KinectBonesLengthPlot(bonesLength,bonesNames)
+    
     figure;
     hold all;
     for i=1:length(bonesLength)
@@ -9,5 +10,6 @@ function [] = KinectBonesLengthPlot(bonesLength,bonesNames)
     title('Longueurs des membres du sujet');
     ylabel('Longeur membre (m)');
     legend(bonesNames);
+
 end
 

@@ -1,4 +1,5 @@
 function [] = KinectSpacePlot(X,Z,Y,nbPoints,legende)
+    
     figure;
     hold all;
     for i=1:nbPoints
@@ -11,5 +12,6 @@ function [] = KinectSpacePlot(X,Z,Y,nbPoints,legende)
     legend(legende);
     grid on;
     view (3), rotate3d on;
+    
 end
 

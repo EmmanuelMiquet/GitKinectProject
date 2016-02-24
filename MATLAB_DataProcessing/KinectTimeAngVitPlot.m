@@ -1,4 +1,5 @@
 function [] = KinectTimeAngVitPlot(t,dTheta,nbAngles,legendeAngle)
+    
     figure;
     hold all;
     for i=1:nbAngles
@@ -9,4 +10,5 @@ function [] = KinectTimeAngVitPlot(t,dTheta,nbAngles,legendeAngle)
     xlabel('t (s)');
     ylabel('d\Theta/dt (Deg/s)');
     legend(legendeAngle);
+
 end

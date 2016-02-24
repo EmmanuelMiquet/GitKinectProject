@@ -1,4 +1,5 @@
 function [] = KinectTimeVitPlot(t,dx,dy,dz,nbPoints,legende)
+    
     figure;
     
     subplot(3,1,1);
@@ -31,4 +32,5 @@ function [] = KinectTimeVitPlot(t,dx,dy,dz,nbPoints,legende)
     xlabel('t (s)');
     ylabel('dZ/dt (m/s)');
     legend(legende);
+    
 end
