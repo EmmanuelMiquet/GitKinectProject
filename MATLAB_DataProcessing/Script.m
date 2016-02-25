@@ -1,26 +1,30 @@
-%% Initialisation et chargement des vecteurs
+%% Initialisation
 close all;
 clear all;
 clc;
 
-% Index des fichiers à lire
+% Add our functions to the path
+addpath('KinectFunctions');
+
+%% Data Load
+% Index of the file we want to read
 indexFile = 0;
 
-% Chemin du dossier de capture
+% Path of the capture folder
 captureFolderPath = '../SkeletonTracking-WPF/bin/Debug/KinectCapture/';
 
-% Chargement des données
+% Data loading
 [t,dt,nbPoints,X,Y,Z,legende] = KinectLoadPosition(captureFolderPath,indexFile,'relative');
 [~,~,nbAngles,Theta,legendeAngle] = KinectLoadAngles(captureFolderPath,indexFile);
 [bonesLength,bonesNames] = KinectLoadBones(captureFolderPath,indexFile);
 [Xn,Yn,Zn] = KinectNormalizePosition(X,Y,Z);
 
 %% Traces des positions dans l'espace
-KinectSpacePlot(X,Z,Y,nbPoints,legende);
+KinectSpacePlot(X,Y,Z,nbPoints,legende);
 title('Positions spatiales des joints');
 
 %% Traces des positions normalisees dans l'espace
-KinectSpacePlot(Xn,Zn,Yn,nbPoints,legende);
+KinectSpacePlot(Xn,Yn,Zn,nbPoints,legende);
 title('Positions relatives des joints');
 
 %% Traces des longueurs des membres

@@ -1,4 +1,4 @@
-function [] = KinectSpacePlot(X,Z,Y,nbPoints,legende)
+function [] = KinectSpacePlot(X,Y,Z,nbPoints,legende)
     
     figure;
     hold all;
