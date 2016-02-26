@@ -1,4 +1,10 @@
 function [classes,IDX,distance,threshold] = KinectClassificationKNN(learningData,learnedClasses,testData,epsilon,K)
+    % This function is a classifier that uses the method of K nearest 
+    % neighbors to find, into the class that the function receives, the 
+    % class in which the test data go. For this, the function receives the
+    % learning data matrix and the classes vector. Then with the test set 
+    % matrix and the number of neighbors K, and threshold epsilon, it
+    % predicts which one is the class for each one into the test set.
     
     % Test du nombre d'arguments
     if nargin < 5

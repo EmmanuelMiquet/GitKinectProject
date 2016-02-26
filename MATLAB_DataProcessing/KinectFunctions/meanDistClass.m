@@ -1,4 +1,9 @@
 function [d] = meanDistClass(class,tmpClasses,distance_t)
+    % When you make a prediction using more than one nearest 
+    % neighbor, this function calculates the average distance of the 
+    % classes found in the k nearest neighbors. Then the function returns
+    % the mean distance between the distances calculated for each class
+    % found
     
     d = 0;
     c = 0;

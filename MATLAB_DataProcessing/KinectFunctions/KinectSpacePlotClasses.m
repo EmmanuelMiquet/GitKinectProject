@@ -1,4 +1,7 @@
 function [] = KinectSpacePlotClasses(predict,Xtest,Ytest,Ztest)
+    % Shows the position of each data predicted by the classifier
+    % belonging to a different class. The data rejected by the classifier 
+    % are not shown
     
     figure;
     hold all;
