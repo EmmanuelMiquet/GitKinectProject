@@ -1,15 +1,17 @@
 function [uBonesLength,uBonesNames] = KinectUniqueBonesFilter(bonesLength,bonesNames)
-    
-    match = zeros(length(bonesLength)); % Initialisation de la matrice de correspondance
+    % Filter the bones length vector and the bones names to eliminate
+    % duplicates values
+
+    match = zeros(length(bonesLength)); % Initialization of local variables
     uBonesLength = [];
     uBonesNames = {};
     
     for i=1:length(bonesLength)
         for j=i:length(bonesLength)
            if(bonesLength(i) ~= bonesLength(j))
-               match(i,j) = 1; % Si les longueurs sont differentes
+               match(i,j) = 1; % If length are different
            else
-               match(i,j) = 0; % Si les longueurs sont identiques
+               match(i,j) = 0; % If length are the same
            end
         end
         

@@ -1,4 +1,5 @@
 function [t,dt,nbPoints,X,Y,Z,legende] = KinectLoadPosition(captureFolderPath,indexFile,relative)
+    % Load the positions values and legend from a capture file
     
     % Test du nombre d'arguments
     if nargin < 3

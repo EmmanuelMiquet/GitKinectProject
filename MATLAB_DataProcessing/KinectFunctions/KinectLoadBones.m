@@ -1,6 +1,7 @@
 function [bonesLength,bonesNames] = KinectLoadBones(captureFolderPath,indexFile)
+    % Load the bones length values and names from a capture file
     
-    % Chargement des legendes pour les anciennes versions de MATLAB
+    % Bones length and names loading
     fileBonesLength = fopen(strcat(captureFolderPath, num2str(indexFile), '_bonesLength.txt'));
     bonesLength = textscan(fileBonesLength,'%s %s %f %s %f','Delimiter',{'\n','\t'});
     fclose(fileBonesLength);

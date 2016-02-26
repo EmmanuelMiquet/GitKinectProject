@@ -1,5 +1,6 @@
 function [d,d2] = VitAcc(x,dt)
-    
+    % Return the values of the derivative values (first and second order)
+
     d = zeros(length(x)-2,1);
 
     for i= 1:length(x)-2

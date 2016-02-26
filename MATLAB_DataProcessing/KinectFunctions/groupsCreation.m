@@ -1,5 +1,6 @@
 function [groups] = groupsCreation(indiceChange,dataLength)
-    % The function uses the vector indices Change, that indicates where the 
+    % Generates a vector of classes 
+    % Uses the vector indices Change, that indicates where the 
     % changes between classes are for the data set used for the classifier 
     % Also receives the values that indicates the number of data for 
     % training. With that, the function makes a vector of classes  of the same

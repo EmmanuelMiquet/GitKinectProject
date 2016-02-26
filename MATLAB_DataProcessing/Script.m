@@ -21,11 +21,11 @@ captureFolderPath = '../SkeletonTracking-WPF/bin/Debug/KinectCapture/';
 
 %% Traces des positions dans l'espace
 KinectSpacePlot(X,Y,Z,nbPoints,legende);
-title('Positions spatiales des joints');
+title('Spatial positions of the joints');
 
 %% Traces des positions normalisees dans l'espace
 KinectSpacePlot(Xn,Yn,Zn,nbPoints,legende);
-title('Positions relatives des joints');
+title('Relative positions of the joints');
 
 %% Traces des longueurs des membres
 KinectBonesLengthPlot(bonesLength,bonesNames);

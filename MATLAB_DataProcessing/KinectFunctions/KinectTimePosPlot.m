@@ -1,5 +1,6 @@
 function [] = KinectTimePosPlot(t,X,Y,Z,nbPoints,legende)
-    
+    % Plot the positions values in time with legend
+
     figure;
     
     subplot(3,1,1);
@@ -8,7 +9,7 @@ function [] = KinectTimePosPlot(t,X,Y,Z,nbPoints,legende)
         plot(t,X(:,i));
     end
     hold off;
-    title('Abscisses au cours du temps');
+    title('Horizontal positions in time');
     xlabel('t (s)');
     ylabel('X (m)');
     
@@ -18,7 +19,7 @@ function [] = KinectTimePosPlot(t,X,Y,Z,nbPoints,legende)
         plot(t,Y(:,i));
     end
     hold off;
-    title('Ordonnées au cours du temps');
+    title('Vertical positions in time');
     xlabel('t (s)');
     ylabel('Y (m)');
 
@@ -28,7 +29,7 @@ function [] = KinectTimePosPlot(t,X,Y,Z,nbPoints,legende)
         plot(t,Z(:,i));
     end
     hold off;
-    title('Profondeurs au cours du temps');
+    title('Depth positions in time');
     xlabel('t (s)');
     ylabel('Z (m)');
     legend(legende);

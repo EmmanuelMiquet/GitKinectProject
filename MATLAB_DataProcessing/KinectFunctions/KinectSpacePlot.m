@@ -1,5 +1,6 @@
 function [] = KinectSpacePlot(X,Y,Z,nbPoints,legende)
-    
+    % Plot the position in 3D space
+
     figure;
     hold all;
     for i=1:nbPoints

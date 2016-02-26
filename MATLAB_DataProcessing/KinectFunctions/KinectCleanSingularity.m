@@ -1,5 +1,6 @@
 function [X,Y,Z] = KinectCleanSingularity(X,Y,Z,nbPoints,dt)
-    %Fonction obsolète (pris en charge par le C#)
+    % Obsolete function (done in the C#)
+    
     ndt = 0;
     for i=1:nbPoints
         for j = 1:length(X(:,i))
