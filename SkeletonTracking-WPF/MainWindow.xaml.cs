@@ -246,6 +246,17 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 this.statusBarText.Text = Properties.Resources.NoKinectReady;
             }
 
+            //Create capture directory
+            if (Directory.Exists(folderPath))
+            {
+                foreach (string file in Directory.GetFiles(folderPath))
+                {
+                    FileInfo tmp = new FileInfo(file);
+                    tmp.Delete();
+                }
+            }
+            Directory.CreateDirectory(folderPath);
+
             // Show the capture directory to the user
             CurrentPathBox.Text = "Capture folder path : \n" + Directory.GetCurrentDirectory().ToString() + "\\" + folderPath.Replace("/","\\");
         }
@@ -781,16 +792,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.timeBox.Text = "0.0000 s";
 
             //Create capture directory
-            if (Directory.Exists(folderPath))
+            if (!Directory.Exists(folderPath))
             {
-                foreach (string file in Directory.GetFiles(folderPath))
-                {
-                    FileInfo tmp = new FileInfo(file);
-                    tmp.Delete();
-                }
+                Directory.CreateDirectory(folderPath);
             }
-            Directory.CreateDirectory(folderPath);
-
+            
             //Modify the names of the differents files
             if (fileIdentifier == 0)
             {
