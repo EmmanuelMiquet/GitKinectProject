@@ -12,6 +12,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
     using System.Windows.Media;
     using Microsoft.Kinect;
     using PL.Kinect;
+    using System.Windows.Forms;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -91,6 +92,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// </summary>
         string pointsCapturePath = folderPath + "pointsCapture.txt";
 
+        /// <summary>
+        /// Path to write relative joints in a file
+        /// </summary>
         string relativePointsCapturePath = folderPath + "relativePointsCapture.txt";
 
         /// <summary>
@@ -117,6 +121,16 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// List of joints that we want to track
         /// </summary>
         List<JointType> wantedJoints = new List<JointType>();
+
+        /// <summary>
+        /// Folder dialog box to change capture folder path
+        /// </summary>
+        FolderBrowserDialog fbd = new FolderBrowserDialog();
+
+        /// <summary>
+        /// Variable to store the checkbox state when chosing seated mode
+        /// </summary>
+        bool[] tmpState = new bool[10];
 
         /// <summary>
         /// Personnal set of tools for our project
@@ -232,16 +246,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                 this.statusBarText.Text = Properties.Resources.NoKinectReady;
             }
 
-            //Create capture directory
-            if (Directory.Exists(folderPath))
-            {
-                foreach (string file in Directory.GetFiles(folderPath))
-                {
-                    FileInfo tmp = new FileInfo(file);
-                    tmp.Delete();
-                }
-            }
-            Directory.CreateDirectory(folderPath);
+            // Show the capture directory to the user
+            CurrentPathBox.Text = "Capture folder path : \n" + Directory.GetCurrentDirectory().ToString() + "\\" + folderPath.Replace("/","\\");
         }
 
         /// <summary>
@@ -368,6 +374,20 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     if (this.checkBoxSeatedMode.IsChecked.GetValueOrDefault())
                     {
                         this.sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
+
+                        // Save current checkbox state
+                        tmpState[0] = (bool)this.HipLeft.IsChecked;
+                        tmpState[1] = (bool)this.KneeLeft.IsChecked;
+                        tmpState[2] = (bool)this.AnkleLeft.IsChecked;
+                        tmpState[3] = (bool)this.FootLeft.IsChecked;
+                        tmpState[4] = (bool)this.HipRight.IsChecked;
+                        tmpState[5] = (bool)this.KneeRight.IsChecked;
+                        tmpState[6] = (bool)this.AnkleRight.IsChecked;
+                        tmpState[7] = (bool)this.FootRight.IsChecked;
+                        tmpState[8] = (bool)this.HipCenter.IsChecked;
+                        tmpState[9] = (bool)this.Spine.IsChecked;
+
+                        // Uncheck all the checkbox influenced by seated mode
                         this.HipLeft.IsChecked = false;
                         this.KneeLeft.IsChecked = false;
                         this.AnkleLeft.IsChecked = false;
@@ -378,20 +398,46 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                         this.FootRight.IsChecked = false;
                         this.HipCenter.IsChecked = false;
                         this.Spine.IsChecked = false;
+
+                        // Disable the uncheked boxes
+                        this.HipLeft.IsEnabled = false;
+                        this.KneeLeft.IsEnabled = false;
+                        this.AnkleLeft.IsEnabled = false;
+                        this.FootLeft.IsEnabled = false;
+                        this.HipRight.IsEnabled = false;
+                        this.KneeRight.IsEnabled = false;
+                        this.AnkleRight.IsEnabled = false;
+                        this.FootRight.IsEnabled = false;
+                        this.HipCenter.IsEnabled = false;
+                        this.Spine.IsEnabled = false;
                     }
                     else
                     {
                         this.sensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Default;
-                        this.HipLeft.IsChecked = true;
-                        this.KneeLeft.IsChecked = true;
-                        this.AnkleLeft.IsChecked = true;
-                        this.FootLeft.IsChecked = false;
-                        this.HipRight.IsChecked = true;
-                        this.KneeRight.IsChecked = true;
-                        this.AnkleRight.IsChecked = true;
-                        this.FootRight.IsChecked = false;
-                        this.HipCenter.IsChecked = true;
-                        this.Spine.IsChecked = true;
+
+                        // Restore previous checked state
+                        this.HipLeft.IsChecked = tmpState[0];
+                        this.KneeLeft.IsChecked = tmpState[1];
+                        this.AnkleLeft.IsChecked = tmpState[2];
+                        this.FootLeft.IsChecked = tmpState[3];
+                        this.HipRight.IsChecked = tmpState[4];
+                        this.KneeRight.IsChecked = tmpState[5];
+                        this.AnkleRight.IsChecked = tmpState[6];
+                        this.FootRight.IsChecked = tmpState[7];
+                        this.HipCenter.IsChecked = tmpState[8];
+                        this.Spine.IsChecked = tmpState[9];
+                        
+                        // Disable the uncheked boxes
+                        this.HipLeft.IsEnabled = true;
+                        this.KneeLeft.IsEnabled = true;
+                        this.AnkleLeft.IsEnabled = true;
+                        this.FootLeft.IsEnabled = true;
+                        this.HipRight.IsEnabled = true;
+                        this.KneeRight.IsEnabled = true;
+                        this.AnkleRight.IsEnabled = true;
+                        this.FootRight.IsEnabled = true;
+                        this.HipCenter.IsEnabled = true;
+                        this.Spine.IsEnabled = true;
                     }
                 }
             }
@@ -415,6 +461,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     this.ProcessData.IsEnabled = false;
                     this.ClearCapture.IsEnabled = false;
                     this.checkBoxSeatedMode.IsEnabled = false;
+                    this.FolderPathButton.IsEnabled = false;
 
                     this.HipCenter.IsEnabled = false;
                     this.Spine.IsEnabled = false;
@@ -730,6 +777,20 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// <param name="e"></param>
         private void ClickProcessData(object sender, RoutedEventArgs e)
         {
+            //Re-initialize the time count
+            this.timeBox.Text = "0.0000 s";
+
+            //Create capture directory
+            if (Directory.Exists(folderPath))
+            {
+                foreach (string file in Directory.GetFiles(folderPath))
+                {
+                    FileInfo tmp = new FileInfo(file);
+                    tmp.Delete();
+                }
+            }
+            Directory.CreateDirectory(folderPath);
+
             //Modify the names of the differents files
             if (fileIdentifier == 0)
             {
@@ -785,9 +846,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             this.Capture_On.IsEnabled = true;
             this.checkBoxSeatedMode.IsEnabled = true;
+            this.FolderPathButton.IsEnabled = true;
 
-            this.HipCenter.IsEnabled = true;
-            this.Spine.IsEnabled = true;
+            
             this.ShoulderCenter.IsEnabled = true;
             this.Head.IsEnabled = true;
             this.ShoulderLeft.IsEnabled = true;
@@ -798,14 +859,20 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.ElbowRight.IsEnabled = true;
             this.WristRight.IsEnabled = true;
             this.HandRight.IsEnabled = true;
-            this.HipLeft.IsEnabled = true;
-            this.KneeLeft.IsEnabled = true;
-            this.AnkleLeft.IsEnabled = true;
-            this.FootLeft.IsEnabled = true;
-            this.HipRight.IsEnabled = true;
-            this.KneeRight.IsEnabled = true;
-            this.AnkleRight.IsEnabled = true;
-            this.FootRight.IsEnabled = true;
+            
+            if(!(bool)this.checkBoxSeatedMode.IsChecked)
+            {
+                this.HipLeft.IsEnabled = true;
+                this.KneeLeft.IsEnabled = true;
+                this.AnkleLeft.IsEnabled = true;
+                this.FootLeft.IsEnabled = true;
+                this.HipRight.IsEnabled = true;
+                this.KneeRight.IsEnabled = true;
+                this.AnkleRight.IsEnabled = true;
+                this.FootRight.IsEnabled = true;
+                this.HipCenter.IsEnabled = true;
+                this.Spine.IsEnabled = true;
+            }
         }
 
         /// <summary>
@@ -818,12 +885,16 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             //Clear the capture data
             tools.clearData();
 
+            //Re-initialize the time count
+            this.timeBox.Text = "0.0000 s";
+
             //Enable/Disable buttons and checkboxes
             this.ClearCapture.IsEnabled = false;
             this.ProcessData.IsEnabled = false;
 
             this.Capture_On.IsEnabled = true;
             this.checkBoxSeatedMode.IsEnabled = true;
+            this.FolderPathButton.IsEnabled = true;
 
             this.HipCenter.IsEnabled = true;
             this.Spine.IsEnabled = true;
@@ -894,6 +965,33 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             if (null == this.sensor)
             {
                 this.statusBarText.Text = Properties.Resources.NoKinectReady;
+            }
+        }
+
+        /// <summary>
+        /// Give the user the ability to change the capture folder path
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClickFolderPath(object sender, RoutedEventArgs e)
+        {
+            fbd.Description = "Select a directory to put \\KinectCapture\\ \n Current selected folder : " + "\\" + folderPath.Replace("/","\\");
+            if (fbd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                if (System.Windows.MessageBox.Show("Your files will be stored at : " + fbd.SelectedPath.ToString() + "\\KinectCapture", "Confirm selected path", MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+                {
+                    //Update the folder path
+                    folderPath = fbd.SelectedPath.ToString().Replace("\\", "\\") + "\\KinectCapture\\";
+                    pointsCapturePath = folderPath + "pointsCapture.txt";
+                    relativePointsCapturePath = folderPath + "relativePointsCapture.txt";
+                    jointsLegendPath = folderPath + "jointsLegend.txt";
+                    anglesDataPath = folderPath + "anglesData.txt";
+                    anglesLegendPath = folderPath + "anglesLegend.txt";
+                    bonesLengthPath = folderPath + "bonesLength.txt";
+
+                    // Update the path showed to the user
+                    CurrentPathBox.Text = "Capture folder path : \n" + folderPath;
+                }
             }
         }
     }
