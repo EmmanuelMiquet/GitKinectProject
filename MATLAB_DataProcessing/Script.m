@@ -8,7 +8,7 @@ addpath('KinectFunctions');
 
 %% Data Load
 % Index of the file we want to read
-indexFile = 1;
+indexFile = 0;
 
 % Path of the capture folder
 captureFolderPath = 'ExperienceData/';

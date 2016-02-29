@@ -484,6 +484,8 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     this.checkBoxSeatedMode.IsEnabled = false;
                     this.FolderPathButton.IsEnabled = false;
                     this.SmoothCheckBox.IsEnabled = false;
+                    this.UpButton.IsEnabled = false;
+                    this.DownButton.IsEnabled = false;
 
                     this.HipCenter.IsEnabled = false;
                     this.Spine.IsEnabled = false;
@@ -867,6 +869,9 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.ClearCapture.IsEnabled = false;
 
             this.NewFiles.IsEnabled = true;
+            this.UpButton.IsEnabled = true;
+            this.DownButton.IsEnabled = true;
+            this.SmoothCheckBox.IsEnabled = true;
         }
 
         /// <summary>
@@ -884,7 +889,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             this.Capture_On.IsEnabled = true;
             this.checkBoxSeatedMode.IsEnabled = true;
-            this.SmoothCheckBox.IsEnabled = true;
             this.FolderPathButton.IsEnabled = true;
 
             
@@ -934,7 +938,10 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.Capture_On.IsEnabled = true;
             this.checkBoxSeatedMode.IsEnabled = true;
             this.FolderPathButton.IsEnabled = true;
+            this.UpButton.IsEnabled = true;
+            this.DownButton.IsEnabled = true;
             this.SmoothCheckBox.IsEnabled = true;
+
 
             this.HipCenter.IsEnabled = true;
             this.Spine.IsEnabled = true;
@@ -1056,6 +1063,40 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
                 // Add an event handler to be called whenever there is new color frame data
                 this.sensor.SkeletonFrameReady += this.SensorSkeletonFrameReady;
+            }
+        }
+
+        /// <summary>
+        /// Allows the user to move the kinect sensor up
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClickUp(object sender, RoutedEventArgs e)
+        {
+            {
+                try
+                {
+                    this.sensor.ElevationAngle += 2;
+                }
+                catch (System.InvalidOperationException) {}
+                catch (System.ArgumentOutOfRangeException){}
+            }
+        }
+
+        /// <summary>
+        /// Allows the user to move the kinect sensor down
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClickDown(object sender, RoutedEventArgs e)
+        {
+            {
+                try
+                {
+                    this.sensor.ElevationAngle -= 2;
+                }
+                catch (System.InvalidOperationException) {}
+                catch (System.ArgumentOutOfRangeException) {}
             }
         }
     }
