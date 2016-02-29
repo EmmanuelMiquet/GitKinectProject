@@ -127,7 +127,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-    <None Include="SkeletonTracking-WPF_CléTemporaire.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\Kinect.ico" />

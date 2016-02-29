@@ -153,6 +153,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         bool captureOn = false;
 
         /// <summary>
+        /// Smoothing parameters for skeleton tracking
+        /// </summary>
+        TransformSmoothParameters smoothingParam = new TransformSmoothParameters();
+
+        /// <summary>
         /// Draws indicators to show which edges are clipping skeleton data
         /// </summary>
         /// <param name="skeleton">skeleton to draw clipping information for</param>
@@ -224,8 +229,19 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             if (null != this.sensor)
             {
-                // Turn on the skeleton stream to receive skeleton frames
-                this.sensor.SkeletonStream.Enable();
+                if (this.SmoothCheckBox.IsChecked.GetValueOrDefault())
+                {
+                    smoothingParam.Smoothing = 0.3f;
+                    smoothingParam.Correction = 0.3f;
+                    smoothingParam.Prediction = 0.3f;
+                    smoothingParam.JitterRadius = 0.07f;
+                    smoothingParam.MaxDeviationRadius = 0.1f;
+                    this.sensor.SkeletonStream.Enable(smoothingParam);
+                }
+                else
+                {
+                    this.sensor.SkeletonStream.Enable();
+                }
 
                 // Add an event handler to be called whenever there is new color frame data
                 this.sensor.SkeletonFrameReady += this.SensorSkeletonFrameReady;
@@ -245,17 +261,6 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 this.statusBarText.Text = Properties.Resources.NoKinectReady;
             }
-
-            //Create capture directory
-            if (Directory.Exists(folderPath))
-            {
-                foreach (string file in Directory.GetFiles(folderPath))
-                {
-                    FileInfo tmp = new FileInfo(file);
-                    tmp.Delete();
-                }
-            }
-            Directory.CreateDirectory(folderPath);
 
             // Show the capture directory to the user
             CurrentPathBox.Text = "Capture folder path : \n" + Directory.GetCurrentDirectory().ToString() + "\\" + folderPath.Replace("/","\\");
@@ -451,6 +456,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                         this.Spine.IsEnabled = true;
                     }
                 }
+                else
+                {
+                    // If there is no Kinect
+                    this.checkBoxSeatedMode.IsChecked = false;
+                }
             }
         }
 
@@ -473,6 +483,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     this.ClearCapture.IsEnabled = false;
                     this.checkBoxSeatedMode.IsEnabled = false;
                     this.FolderPathButton.IsEnabled = false;
+                    this.SmoothCheckBox.IsEnabled = false;
 
                     this.HipCenter.IsEnabled = false;
                     this.Spine.IsEnabled = false;
@@ -503,6 +514,11 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     this.ClearCapture.IsEnabled = true;
                 }
             }
+            else
+            {
+                // If there is no Kinect
+                this.Capture_On.IsChecked = false;
+            }
         }
 
         /// <summary>
@@ -512,13 +528,21 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
         /// <param name="e">event arguments</param>
         private void CheckBoxDisplayAllJoints(object sender, RoutedEventArgs e)
         {
-            if (this.displayAll.IsChecked.GetValueOrDefault())
+            if (this.sensor != null)
             {
-                displayAllJoints = true;
+                if (this.displayAll.IsChecked.GetValueOrDefault())
+                {
+                    displayAllJoints = true;
+                }
+                else
+                {
+                    displayAllJoints = false;
+                }
             }
             else
             {
-                displayAllJoints = false;
+                // If there is no Kinect
+                this.displayAll.IsChecked = false;
             }
         }
 
@@ -796,7 +820,15 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             {
                 Directory.CreateDirectory(folderPath);
             }
-            
+            else if (Directory.Exists(folderPath) && fileIdentifier == 0)
+            {
+                foreach (string file in Directory.GetFiles(folderPath))
+                {
+                    FileInfo tmp = new FileInfo(file);
+                    tmp.Delete();
+                }
+            }
+
             //Modify the names of the differents files
             if (fileIdentifier == 0)
             {
@@ -852,6 +884,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
 
             this.Capture_On.IsEnabled = true;
             this.checkBoxSeatedMode.IsEnabled = true;
+            this.SmoothCheckBox.IsEnabled = true;
             this.FolderPathButton.IsEnabled = true;
 
             
@@ -901,6 +934,7 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
             this.Capture_On.IsEnabled = true;
             this.checkBoxSeatedMode.IsEnabled = true;
             this.FolderPathButton.IsEnabled = true;
+            this.SmoothCheckBox.IsEnabled = true;
 
             this.HipCenter.IsEnabled = true;
             this.Spine.IsEnabled = true;
@@ -998,6 +1032,30 @@ namespace Microsoft.Samples.Kinect.SkeletonBasics
                     // Update the path showed to the user
                     CurrentPathBox.Text = "Capture folder path : \n" + folderPath;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Enable or deisable smoothing parameters
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CheckBoxSmoothing(object sender, RoutedEventArgs e)
+        {
+            if (this.sensor != null)
+            {
+                this.sensor.SkeletonStream.Disable();
+                if (this.SmoothCheckBox.IsChecked.GetValueOrDefault())
+                {
+                    this.sensor.SkeletonStream.Enable(smoothingParam);
+                }
+                else
+                {
+                    this.sensor.SkeletonStream.Enable();
+                }
+
+                // Add an event handler to be called whenever there is new color frame data
+                this.sensor.SkeletonFrameReady += this.SensorSkeletonFrameReady;
             }
         }
     }

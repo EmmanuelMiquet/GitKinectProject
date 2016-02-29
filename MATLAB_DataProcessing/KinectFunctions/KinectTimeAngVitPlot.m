@@ -7,7 +7,7 @@ function [] = KinectTimeAngVitPlot(t,dTheta,nbAngles,legendeAngle)
         plot(t(1:length(dTheta(:,i))-4),dTheta((1:length(dTheta(:,i))-4),i));
     end
     hold off;
-    title('Angles speed in time');
+    title('Anglular speeds in time');
     xlabel('t (s)');
     ylabel('d\Theta/dt (Deg/s)');
     legend(legendeAngle);
