@@ -27,13 +27,13 @@ function [classes,IDX,distance,threshold] = KinectClassificationKNN(learningData
     for i = 1:length(testData(:,1)) % Processing
         for j = 1:K
             tmpClasses(j) = learnedClasses(IDX(i,j));
-            d(j) = meanDistClass(j,tmpClasses,distance(i,:));
+            d(j) = meanDistClass(tmpClasses(j),tmpClasses,distance(i,:));
         end
 
         [d , class] = min(d);
 
         if d < threshold
-            classes(i,1) = class;
+            classes(i,1) = tmpClasses(class);
         else
             classes(i,1) = 0;
         end
