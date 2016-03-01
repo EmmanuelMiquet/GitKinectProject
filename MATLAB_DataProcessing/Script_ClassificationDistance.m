@@ -7,31 +7,32 @@ clc;
 addpath('KinectFunctions');
 
 %% Data Load
-% Trainning data
-[~,~,nbAngles,trainningAng,legendAngles] = KinectLoadAngles('TrainningData/',0);
-[t_trainning,~,nbPoints,Xt,Yt,Zt,legende] = KinectLoadPosition('TrainningData/',0,'relative');
+% Training data
+[~,~,nbAngles,trainingAng,legendAngles] = KinectLoadAngles('trainingData/',0);
+[t_training,~,nbPoints,Xt,Yt,Zt,legende] = KinectLoadPosition('trainingData/',0,'relative');
 [Xt,Yt,Zt] = KinectNormalizePosition(Xt,Yt,Zt);
+
+trainingPos = [Xt Yt Zt];
 
 % Testing data
 [~,~,~,testAng,~] = KinectLoadAngles('ExperienceData/',1);
 [t_test,~,~,Xe,Ye,Ze,~] = KinectLoadPosition('ExperienceData/',1,'relative');
 [Xe,Ye,Ze] = KinectNormalizePosition(Xe,Ye,Ze);
 
-trainningPos = [Xt Yt Zt];
 testPos = [Xe Ye Ze];
 
-trainning = [trainningAng/max(max(trainningAng)) trainningPos/max(max(trainningPos))];
-test = [testAng/max(max(testAng)) testPos/max(max(trainningPos))];
+training = [trainingAng/max(max(trainingAng)) trainingPos/max(max(trainingPos))];
+test = [testAng/max(max(testAng)) testPos/max(max(trainingPos))];
 
-%% Class vector trainning
-groups = groupsCreation([0 81 154],length(t_trainning));
+%% Class vector training
+groups = groupsCreation([0 81 154],length(t_training));
 
 %% Classification of test data
 % Parametres
 epsilon = 0.2; % Global tolerance
 K = 3; % Number of neighbors to consider
 
-[predict,IDX,distance,seuil] = KinectClassificationKNN(trainning,groups,test,epsilon,K);
+[predict,IDX,distance,seuil] = KinectClassificationKNN(training,groups,test,epsilon,K);
 
 %% Plot results
 figure;
@@ -44,20 +45,20 @@ for i = 1:K
 end
 hold off;
 grid on;
-title('Minimum distance(s) between trainning and test data');
+title('Minimum distance(s) between training and test data');
 xlabel('Time (s)'); 
 ylabel('Distance between Neighbors');
 
 subplot(3,1,2);
 hold all;
 for i = 1:K
-    plot(t_test,t_test(IDX(:,i),1))
+    plot(t_test,t_training(IDX(:,i),1))
 end
 hold off;
 grid on;
-title('Time correspondance Trainning/Test');
+title('Time correspondance training/test');
 xlabel('Testing time (s)'); 
-ylabel('Trainning time (s)');
+ylabel('Training time (s)');
 
 subplot(3,1,3);
 plot(t_test,predict);

@@ -18,8 +18,8 @@ function [classes,IDX,distance,threshold] = KinectClassificationKNN(learningData
     d = zeros(1,K);
 
     threshold = min(min(distance)) + epsilon; % threshold adaptation to prevent from abuses
-    if threshold >= 0.5*max(max(distance))
-        threshold = 0.5*max(max(distance));
+    if threshold >= 0.6*max(max(distance))
+        threshold = 0.6*max(max(distance));
     elseif max(max(distance)) < 1
         threshold = threshold/1.7; 
     end

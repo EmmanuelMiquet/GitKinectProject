@@ -4,7 +4,7 @@ function [] = KinectSpacePlot(X,Y,Z,nbPoints,legende)
     figure;
     hold all;
     for i=1:nbPoints
-        plot3(X(:,i),Z(:,i),Y(:,i));
+        plot3(X(:,i),Z(:,i),Y(:,i),'LineWidth',1.25);
     end
     hold off;
     xlabel('x');

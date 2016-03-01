@@ -4,7 +4,7 @@ function [groups] = groupsCreation(indiceChange,dataLength)
     % changes between classes are for the data set used for the classifier 
     % Also receives the values that indicates the number of data for 
     % training. With that, the function makes a vector of classes  of the same
-    % length as the data set used for trainning
+    % length as the data set used for training
     
     groups = zeros(dataLength,1);
 
