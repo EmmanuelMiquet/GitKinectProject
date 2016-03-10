@@ -2,7 +2,14 @@
 Git repository for Kinect Projet Long in LAAS (feb - mar 2016)
 
 # Content
-- MATLAB_DataProcessing
+- Matlab_CustomClassification
+	- ExperienceData : Folder for experience data
+	- KinectFunctions : Contains all our developed Kinect functions (this folder is added to the path within MATLAB to use our functions)
+	- TrainingDataBase : Contains our data files for our three positions (a lot of points ...) Positions and/or data can be added (see readme in the folder)
+	- Script_ClassificationDistance : Script to classify the data with our classification function based on KNN (with the use of the database, how to manage the load of multiple files)
+
+- Matlab_Toolbox&Classification_usageExample
+	- Examples on how to use our Kinect functions to plot, process and classify Kinect data
 	- ExperienceData : Folder for experience data
 	- KinectFunctions : Contains all our developed Kinect functions (this folder is added to the path within MATLAB to use our functions)
 	- TrainingData : Folder for training data
