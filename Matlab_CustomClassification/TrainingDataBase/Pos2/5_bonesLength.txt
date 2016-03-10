@@ -1,0 +1,12 @@
+ShoulderCenter - Head - Spine                   	ShoulderCenter - Head          	0.206750142038558	ShoulderCenter - Spine         	0.365339262541288
+Spine - ShoulderCenter - HipCenter              	Spine - ShoulderCenter         	0.365339262541288	Spine - HipCenter              	0.0858549510052559
+ElbowRight - WristRight - ShoulderRight         	ElbowRight - WristRight        	0.244153941846982	ElbowRight - ShoulderRight     	0.274783347704427
+ShoulderRight - ShoulderCenter - ElbowRight     	ShoulderRight - ShoulderCenter 	0.210667795332084	ShoulderRight - ElbowRight     	0.274783347704427
+KneeRight - AnkleRight - HipRight               	KneeRight - AnkleRight         	0.376056555268996	KneeRight - HipRight           	0.631510925266767
+HipRight - HipCenter - KneeRight                	HipRight - HipCenter           	0.11300078224673	HipRight - KneeRight           	0.631510925266767
+ShoulderRight - ShoulderLeft - ElbowRight       	ShoulderRight - ShoulderLeft   	0.366443231670021	ShoulderRight - ElbowRight     	0.274783347704427
+ElbowLeft - WristLeft - ShoulderLeft            	ElbowLeft - WristLeft          	0.234604690878284	ElbowLeft - ShoulderLeft       	0.287030266299066
+ShoulderLeft - ShoulderCenter - ElbowLeft       	ShoulderLeft - ShoulderCenter  	0.20471662223171	ShoulderLeft - ElbowLeft       	0.287030266299066
+KneeLeft - AnkleLeft - HipLeft                  	KneeLeft - AnkleLeft           	0.362576465610351	KneeLeft - HipLeft             	0.626241961149104
+HipLeft - HipCenter - KneeLeft                  	HipLeft - HipCenter            	0.116918275800419	HipLeft - KneeLeft             	0.626241961149104
+ShoulderLeft - ShoulderRight - ElbowLeft        	ShoulderLeft - ShoulderRight   	0.366443231670021	ShoulderLeft - ElbowLeft       	0.287030266299066
