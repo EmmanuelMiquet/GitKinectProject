@@ -1,5 +1,0 @@
-Spine         
-ShoulderCenter
-ShoulderRight 
-ElbowRight    
-WristRight    
