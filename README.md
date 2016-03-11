@@ -13,7 +13,7 @@ Git repository for Kinect Projet Long in LAAS (feb - mar 2016)
 	- DataStreamDisplayAndGraphs : Folder containing scripts and functions to display joints obtained with RGB and IR trackings for comparison
 	- SkeletonAndJointsDisplay : Folder containing scripts and functions to display a skeleton and plot retrieved data
 	- UnsupervisedPositionClassification : Folder containing scripts and functions to classify a simple movement using simple absolute positions and using K-Means unsupervised learning
-	Note: Require the "Image acquisition toolbox" and a Matlab 2014 version or newer
+	- Note: Require the "Image acquisition toolbox" and a Matlab 2014 version or newer
 
 - Matlab_Toolbox&Classification_usageExample : Simple and unitary tests to use our KinectFunctions library
 	- Examples on how to use our Kinect functions to plot, process and classify Kinect data
