@@ -1,0 +1,28 @@
+Instances Changements Nages
+
+1er 200m crawl :
+	50m crawl de 20851 à 22937
+	virage de 22937 à 22984
+	50m crawl de 22984 à 25137
+	virage de 25137 à 25221
+	50m crawl de 25221 à 27276
+	virage de 27276 à 27477
+	50 crawl de 27477 à 29534
+
+2eme 200m crawl :
+	50m crawl de  à 
+	virage de  à 
+	50m crawl de  à 
+	virage de  à 
+	50m crawl de  à 
+	virage de  à 
+	50m crawl de  à 
+
+200m 4 nages :
+	50m papillon de 49251 à 51151
+	virage papillon-dos de 51151 à 51424
+	50m dos de 51424 à 53724
+	virage dos-brasse de 53724 à 53901
+	50m brasse de 53901 à 56601
+	virage brasse-crawl de 56601 à 56851
+	50m crawl de 56851 à 58801
