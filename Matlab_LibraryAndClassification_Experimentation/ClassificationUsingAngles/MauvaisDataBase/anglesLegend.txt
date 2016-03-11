@@ -1,0 +1,10 @@
+ShoulderCenter - Head - Spine                   
+Spine - ShoulderCenter - HipCenter              
+ElbowRight - WristRight - ShoulderRight         
+ShoulderRight - ShoulderCenter - ElbowRight     
+KneeRight - AnkleRight - HipRight               
+HipRight - HipCenter - KneeRight                
+ElbowLeft - WristLeft - ShoulderLeft            
+ShoulderLeft - ShoulderCenter - ElbowLeft       
+KneeLeft - AnkleLeft - HipLeft                  
+HipLeft - HipCenter - KneeLeft                  
